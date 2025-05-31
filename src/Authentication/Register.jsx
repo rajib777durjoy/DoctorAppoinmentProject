@@ -25,6 +25,7 @@ const Register = () => {
         googleSign()
             .then(res => {
                 console.log('respons', res.user)
+                navigateHome('/')
             })
             .catch(erro => {
                 console.log('error', erro)
@@ -67,6 +68,7 @@ const Register = () => {
                             .then(response => {
                                 console.log("response", response.data)
                                 if (response.data?.insertedId) {
+                                    console.log('responst data instadnds',response.data?.insertedId)
                                     Swal.fire({
                                         position: "top-center",
                                         icon: "success",
@@ -74,7 +76,7 @@ const Register = () => {
                                         showConfirmButton: false,
                                         timer: 1500
                                     });
-                                    navigateHome('/')
+                                    navigateHome('/') 
                                 }
                             })
                     }

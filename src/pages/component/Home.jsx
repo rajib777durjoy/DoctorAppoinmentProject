@@ -5,6 +5,7 @@ import About from './About';
 import Category from './Category';
 import Blog from './Blog';
 import Doctors from '../Doctor/Doctors';
+import AddDoctor from '../Doctor/AddDoctor';
 
 const Home = () => {
     return (
@@ -17,6 +18,7 @@ const Home = () => {
             <Doctors></Doctors>
             <About></About>
             <Blog></Blog>
+            <AddDoctor></AddDoctor>
         </div>
     );
 };

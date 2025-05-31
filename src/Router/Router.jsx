@@ -15,6 +15,13 @@ import NewsPost from '../pages/Admin/Component/NewsPost';
 import PaymentDetails from '../pages/Admin/Component/PaymentDetails';
 import StaticsPage from '../pages/Static/StaticsPage';
 import AddCategory from '../pages/Admin/Component/AddCategory';
+import Payment from '../pages/Payment/Payment';
+import Profile from '../pages/Mamber/Component/Profile';
+import MemberPaymentList from '../pages/Mamber/Component/MemberPaymentList';
+import AppointmentList from '../pages/Mamber/Component/AppointmentList';
+import Chat from '../pages/Mamber/Component/Chat';
+import PasentList from '../pages/Doctor/Component/PasentList';
+import DcBalance from '../pages/Doctor/Component/DcBalance';
 
 const Router = createBrowserRouter([
     {
@@ -48,6 +55,10 @@ const Router = createBrowserRouter([
             {
                 path:'/alldoctor',
                 element:<AllDoctor></AllDoctor>
+            },
+            {
+                path:'/payment/:value',
+                element:<Payment></Payment>
             }
 
         ]
@@ -65,6 +76,14 @@ const Router = createBrowserRouter([
                 element:<AddCategory></AddCategory>
             },
             {
+              path:'listofPasent',
+              element:<PasentList></PasentList>
+            },
+            {
+              path:'DoctorBalance',
+              element:<DcBalance></DcBalance>
+            },
+            {
                 path:'applidlist',
                 element:<AppliedList></AppliedList>
             },
@@ -75,6 +94,26 @@ const Router = createBrowserRouter([
             {
                 path:'paymentList',
                 element:<PaymentDetails></PaymentDetails>
+            },
+            {
+                path:'profile',
+                element:<Profile></Profile>
+            },
+            {
+               path:'doctorAdd',
+               element:<AddDoctor></AddDoctor>
+            },
+            {
+                path:'paymentShow',
+                element:<MemberPaymentList></MemberPaymentList>
+            },
+            {
+                path:'appoinmentlist',
+                element:<AppointmentList></AppointmentList>
+            },
+            {
+                path:'Chat',
+                element:<Chat></Chat>
             }
 
         ]

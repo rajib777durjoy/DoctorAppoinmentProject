@@ -42,6 +42,9 @@ const AppliedList = () => {
         }
 
     }
+    const handleMoreDetails=(id)=>{
+     console.log("more details id",id);
+    }
     return (
         <div className="overflow-x-auto">
             <table className="table table-xs">
@@ -75,7 +78,7 @@ const AppliedList = () => {
 
                                 </fieldset>
                             </td>
-                            <td><button className='btn text-xs'>more</button></td>
+                            <td><button onClick={()=>handleMoreDetails(item?._id)} className='btn text-xs'>more</button></td>
                         </tr>)
                     }
                     {/* <tr>

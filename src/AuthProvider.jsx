@@ -3,8 +3,12 @@ import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged,
 import { auth } from './firebase.config';
 import AxiosPublic from './Hook/AxosPublic';
 
+
 export const Auth = createContext();
+
+
 const AuthProvider = ({children}) => {
+
  const provider = new GoogleAuthProvider();
  const [user,setuser]=useState(null)
  const [loading,setloading]=useState(true)
@@ -35,14 +39,14 @@ const AuthProvider = ({children}) => {
    const Unsubcribe = onAuthStateChanged(auth,(currentuser)=>{
         console.log('currentuser:',currentuser)
         setuser(currentuser)
-        if(currentuser?.email){
-         
+        setloading(false)
+        if(currentuser?.email){    
          axiospublic.get(`/jwt/${currentuser?.email}`,{
             withCredentials: true
          })
          .then(res=>{
             console.log('token',res.data?.token)
-            setloading(false)
+            
          }) 
         }
         else{
