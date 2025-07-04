@@ -24,8 +24,10 @@ import DcBalance from '../pages/Doctor/Component/DcBalance';
 import DoctorHome from '../pages/Doctor/Component/DoctorHome';
 import MemberHome from '../pages/Mamber/Component/MemberHome';
 import AdminHome from '../pages/Admin/Component/AdminHome';
-import CategoryDetails from '../pages/component/Categorys/categoryDetails';
+
 import Profile_page from '../ProfileManagement/Profile_page';
+import CategoryDetails from '../Layout/Categorys/categoryDetails';
+
 
 const Router = createBrowserRouter([
     {
