@@ -14,8 +14,8 @@ const AllDoctor = () => {
   }, []);
 
   return (
-    <div className="w-full min-h-screen py-16 bg-white">
-      {/* Heading */}
+   <div className="w-full min-h-screen py-16 bg-white">
+      {/* Header Section */}
       <div className="max-w-5xl mx-auto mb-12 px-4">
         <h1 className="text-5xl font-extrabold text-yellow-500 text-center">
           Our Expert Doctors
@@ -25,53 +25,52 @@ const AllDoctor = () => {
         </p>
       </div>
 
-      {/* Main content area */}
-      <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row gap-10">
-        {/* Doctors Grid */}
-        <div className="md:flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {doctors?.map(item => (
+      {/* Doctor Cards Grid */}
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          {doctors?.map((item, index) => (
             <motion.div
               key={item._id}
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 cursor-pointer flex flex-col"
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="bg-white rounded-2xl shadow-md hover:shadow-xl border border-yellow-300 flex flex-col items-center p-6 transition-transform duration-300 hover:scale-[1.03]"
             >
-              <figure className="overflow-hidden rounded-t-xl h-48">
+              {/* Profile Image */}
+              <figure className="relative w-32 h-32 mb-4">
                 <img
                   src={item?.image}
                   alt={item?.name}
-                  className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
+                  className="rounded-full w-full h-full object-cover border-4 border-yellow-400"
                 />
+                <span className="absolute bottom-0 right-0 bg-green-500 border-white border-2 w-4 h-4 rounded-full"></span>
               </figure>
-              <div className="p-6 flex flex-col flex-grow">
-                <h2 className="text-xl font-semibold mb-1 text-yellow-600">{item?.name}</h2>
-                <p className="text-gray-700 mb-1"><span className="font-semibold">Email:</span> {item?.email}</p>
-                <p className="text-gray-700 mb-4"><span className="font-semibold">Category:</span> {item?.Category}</p>
-                <div className="mt-auto">
-                  <Link to={`/doctorDetails/${item?._id}`}>
-                    <button className="w-full bg-yellow-400 hover:bg-yellow-500 text-white py-2 rounded-lg font-semibold shadow-md transition">
-                      View Details
-                    </button>
-                  </Link>
-                </div>
-              </div>
+
+              {/* Name */}
+              <h2 className="text-xl font-bold text-gray-800 text-center mb-1">{item?.name}</h2>
+
+              {/* Specialization or Category */}
+              {item?.Category && (
+                <p className="text-sm text-yellow-600 font-medium bg-yellow-100 px-3 py-1 rounded-full mb-2">
+                  {item?.Category}
+                </p>
+              )}
+
+              {/* Short Description */}
+              <p className="text-gray-600 text-sm text-center mb-4 line-clamp-3 h-[72px]">
+                {item?.description?.slice(0, 90)}...
+              </p>
+
+              {/* Action Button */}
+              <Link to={`/doctorDetails/${item?._id}`} className="w-full">
+                <button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded-full transition duration-200 shadow-sm hover:shadow-lg">
+                  View Profile
+                </button>
+              </Link>
             </motion.div>
           ))}
         </div>
-
-        {/* Sidebar Suggest Section */}
-        {/* <aside className="hidden md:block w-80 border border-yellow-300 rounded-xl p-6 shadow-md bg-yellow-50">
-          <h3 className="text-xl font-bold text-yellow-600 mb-4 text-center">Suggestions</h3>
-          <ul className="space-y-3 text-gray-700">
-            <li>📌 Check doctor ratings and reviews</li>
-            <li>📌 Book appointments online</li>
-            <li>📌 Consult specialists in your area</li>
-            <li>📌 Read health tips and articles</li>
-            <li>📌 Access your medical records securely</li>
-          </ul>
-        </aside> */}
       </div>
     </div>
   );

@@ -49,36 +49,9 @@ const Navbar = () => {
       >
         Our Doctors
       </NavLink>
-      <NavLink
-        to="/about"
-        className={({ isActive }) =>
-          `mx-3 px-3 py-2 rounded-lg text-lg font-semibold transition-colors ${
-            isActive
-              ? 'text-amber-900 bg-amber-200 shadow-lg'
-              : 'text-gray-800 hover:text-amber-700 hover:bg-amber-100'
-          }`
-        }
-      >
-        About
-      </NavLink>
-      <NavLink
-        to="/contact"
-        className={({ isActive }) =>
-          `mx-3 px-3 py-2 rounded-lg text-lg font-semibold transition-colors ${
-            isActive
-              ? 'text-amber-900 bg-amber-200 shadow-lg'
-              : 'text-gray-800 hover:text-amber-700 hover:bg-amber-100'
-          }`
-        }
-      >
-        Contact
-      </NavLink>
-    </>
-  );
-
-  const protectedLinks = (
-    <>
-      {admin && (
+      {
+        <div className='flex'>
+          {admin && (
         <NavLink
           to="/dashboard/adminHome"
           className="block px-4 py-2 rounded-md hover:bg-amber-200 hover:text-amber-900 font-medium transition"
@@ -97,17 +70,19 @@ const Navbar = () => {
       {member && (
         <NavLink
           to="/dashboard/memberHome"
-          className="block px-4 py-2 rounded-md hover:bg-amber-200 hover:text-amber-900 font-medium transition"
+          className="block px-4 py-2 rounded-md hover:bg-amber-200 hover:text-amber-900 font-bold transition"
         >
          Dashboard
         </NavLink>
       )}
       <NavLink
         to="/profile_page"
-        className="block px-4 py-2 rounded-md hover:bg-amber-200 hover:text-amber-900 font-medium transition"
+        className="block px-4 py-2 rounded-md hover:bg-amber-200  hover:text-amber-900 font-bold transition"
       >
         Profile
       </NavLink>
+        </div>
+      }
     </>
   );
 
@@ -147,14 +122,7 @@ const Navbar = () => {
                     className="w-12 h-12 rounded-full border-4 border-white shadow-md"
                   />
                 </button>
-                <div
-                  className="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-2xl py-3 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto z-30"
-                  role="menu"
-                  aria-orientation="vertical"
-                  aria-label="User dropdown menu"
-                >
-                  {protectedLinks}
-                </div>
+               
               </div>
 
               {/* Logout Button */}
@@ -214,7 +182,7 @@ const Navbar = () => {
           >
             <div className="flex flex-col items-center space-y-2">
               {links}
-              {user && protectedLinks}
+              
               {user ? (
                 <button
                   onClick={() => {
