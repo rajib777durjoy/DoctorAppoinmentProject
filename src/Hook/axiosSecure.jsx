@@ -15,10 +15,10 @@ const axiosSecure = () => {
   const navigateLogin= useNavigate()
 
     instance.interceptors.response.use(function (response) {
-      console.log('response data',response)
+      // console.log('response data',response)
       return response;
     }, async (error)=> {
-       console.log('error interceptor',error)
+      //  console.log('error interceptor',error)
        if(error?.status == 401 || error?.status == 403){
          await signout()
           navigateLogin('/login')
