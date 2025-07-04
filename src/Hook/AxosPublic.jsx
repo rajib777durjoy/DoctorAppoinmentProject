@@ -3,7 +3,7 @@ import React from 'react';
 
 const AxiosPublic = () => {
     const instance = axios.create({
-        baseURL:`${import.meta.env.VITE_Server_link}`,
+        baseURL:`${import.meta.env.VITE_DEPLOY_LINK}`,
       }); 
       return instance;
 };
