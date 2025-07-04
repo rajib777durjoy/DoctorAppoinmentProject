@@ -11,7 +11,7 @@ const Payment = () => {
     const price= value.split(',')[1];
     const day= value.split(',')[0];
     const id = value.split(',')[2];
-    console.log('values:',value)
+    console.log('values:',value,typeof price)
     const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_API_KEY);
 
     const options = {

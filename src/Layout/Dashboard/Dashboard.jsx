@@ -8,44 +8,62 @@ import Mambers from '../../pages/Mamber/Component/Mambers';
 import Doctor from '../../pages/Doctor/Doctor';
 
 const Dashboard = () => {
-    const {user}=useAuth()
-    const AxiosSecure= axiosSecure()
-    const {data:userVerify=[],isPending}=useQuery({
-     queryKey:[user?.email],
-     queryFn:async()=>{
-        const res= await AxiosSecure(`/userverify/${user?.email}`,)
-        console.log('res',res.data)
-        return res.data;
-     }
-    })
-    if(isPending){
-        return <div className='text-2xl text-center text-red-500'>Loading ....</div>
-    }
-    const admin = userVerify?.user === 'admin';
-    const doctor = userVerify?.user === 'doctor';
-    const member = userVerify?.user === 'member';
-    console.log('userverify:',userVerify)
+  const { user } = useAuth();
+  const AxiosSecure = axiosSecure();
+
+  const { data: userVerify = {}, isPending } = useQuery({
+    queryKey: ['user-role', user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await AxiosSecure(`/userverify/${user?.email}`);
+      return res.data;
+    },
+  });
+
+  const isAdmin = userVerify?.user === 'admin';
+  const isDoctor = userVerify?.user === 'doctor';
+  const isMember = userVerify?.user === 'member';
+
+  if (isPending) {
     return (
-        <div className='w-[100%]'>
-           <h1 className='h-[70px] border sticky top-0 z-40 bg-amber-300'></h1>
-           <div className='w-[100%]  flex'>
-               <div className='w-[10%] h-[700px] border fixed top-[70px] z-40'>
-                 {
-                   member && <Mambers></Mambers>
-                 }
-                 {
-                    admin && <Admin></Admin>
-                 }
-                 {
-                  doctor && <Doctor></Doctor>
-                 }
-               </div>
-               <div className='w-[90%] min-h-screen ms-[10%]'>
-                <Outlet></Outlet>
-               </div>
-           </div>
-        </div>
+      <div className="flex justify-center items-center h-screen text-2xl font-semibold text-yellow-600">
+        Loading Dashboard...
+      </div>
     );
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col bg-gray-100">
+      {/* Header */}
+      <header className="bg-white shadow-md sticky top-0 z-50 h-[70px] flex items-center justify-between px-6 border-b border-gray-200">
+        <h1 className="text-xl font-bold text-yellow-600 capitalize">
+          🩺{userVerify?.user} Dashboard
+        </h1>
+        <div className="text-gray-600 font-medium">
+          Welcome, {user?.displayName || user?.email}
+        </div>
+      </header>
+
+      {/* Body */}
+      <div className="flex flex-1">
+        {/* Sidebar */}
+        <aside className="w-[240px] bg-white border-r border-gray-200 p-4 shadow-md fixed top-[70px] bottom-0 z-40 overflow-y-auto">
+          <nav className="space-y-6">
+            {isMember && <Mambers />}
+            {isAdmin && <Admin />}
+            {isDoctor && <Doctor />}
+          </nav>
+        </aside>
+
+        {/* Main Content */}
+        <main className="ml-[240px] flex-1 p-6">
+          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+            <Outlet />
+          </div>
+        </main>
+      </div>
+    </div>
+  );
 };
 
 export default Dashboard;

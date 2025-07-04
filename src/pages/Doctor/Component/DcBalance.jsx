@@ -33,7 +33,6 @@ const DcBalance = () => {
                             <td>{item?.pasentList?.appliedName}</td>
                             <td>{item?.pasentList?.amount}</td>
                         </tr>
-
                     </tbody>)
                 }
 

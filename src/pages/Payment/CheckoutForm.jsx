@@ -26,8 +26,7 @@ const CheckoutForm = ({ price, day,id }) => {
         console.log('payment done:', res.data?.clientSecret)
         setclientSecret(res.data?.clientSecret)
       })
-
-  }, [])
+  },[])
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -85,13 +84,12 @@ const CheckoutForm = ({ price, day,id }) => {
           appointmentDay: day,
           appliedEmail: user?.email,
           appliedName: user?.displayName,
-          doctor_id:id,
-
+          doctor_id:id
         }
-        AxiosSecure.post('/paymentHistory', history)
+        AxiosSecure.post(`/paymentHistory/${id}`, history)
           .then(res => {
             console.log('resposn payment:', res.data)
-            if (res.data.insertedId) {
+            if (res.data) {
               Swal.fire({
                 position: "top-center",
                 icon: "success",

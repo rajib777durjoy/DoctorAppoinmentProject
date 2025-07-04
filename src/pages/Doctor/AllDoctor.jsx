@@ -1,80 +1,80 @@
-
-import { motion } from "motion/react";
-import { Link } from "react-router-dom";
-import AxiosPublic from "../../Hook/AxosPublic";
 import React, { useEffect, useState } from 'react';
-// {
-//     "_id": "67efcb85d4b839e12801a73e",
-//     "name": "durjoy chando",
-//     "email": "durjoy2001chando@gmail.com",
-//     "image": "https://i.ibb.co/Z115VHZk/IMG-20220630-200229.jpg",
-//     "fee": "1000",
-//     "Register": "545353",
-//     "StartTime": "18:06",
-//     "endTime": "21:30",
-//     "Category": "Pediatrician",
-//     "description": "Treatment for dropped head syndrome (DHS) depends on the underlying cause. DHS is a condition where the neck muscles become weak, causing the head to droop forward. Common causes include neuromuscular diseases, cervical spine disorders, or Parkinson’s disease. Here are the main treatment options:",
-//     "day": [
-//         "Friday",
-//         "Saterday",
-//         "Sunday"
-//     ],
-//     "skill": [
-//         "MBBS"
-//     ],
-//     "status": "done",
-//     "PatientLimit": "50",
-//     "role": "doctor"
-// }
+import { motion } from 'framer-motion'; 
+import { Link } from 'react-router-dom';
+import AxiosPublic from '../../Hook/AxosPublic';
+
 const AllDoctor = () => {
-    const axiospublic = AxiosPublic()
-    const [doctors, setdoctor] = useState([]);
-    useEffect(() => {
-        axiospublic.get('/doctor/alldoctor')
-            .then(res => {
-                console.log('responst doctor', res?.data)
-                setdoctor(res?.data)
+  const axiospublic = AxiosPublic();
+  const [doctors, setdoctor] = useState([]);
 
-            })
-    }, [])
-    return (
-        <div className='w-[100%] my-10 min-h-[500px]'>
-            <div className='w-[50%] mx-auto my-10 py-5 '>
-                <h1 className='text-4xl text-center font-bold'>Doctor Fetures</h1>
-            </div>
-            <div className="w-[90%] mx-auto flex justify-baseline">
-                <div className='w-[75%]  border border-red-500 mx-auto min-h-screen grid md:grid-cols-3  gap-3  '>
-                    {
-                        doctors?.map(item => <motion.div
-                            initial={{ opacity: 0, y: 50 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5 }}
-                            className="card hover:bg-slate-300 h-[300px] shadow-md shadow-amber-300 hover:shadow-md hover:shadow-gray-400">
-                            <figure className="px-10 pt-10">
-                                <img
-                                    src={item?.image}
-                                    alt=""
-                                    className="rounded-xl" />
-                            </figure>
-                            <div className="card-body items-center text-center">
-                                <h1 className="capitalize text-start w-[90%] mx-auto">{item?.name}</h1>
-                                <h2 className="text-start w-[90%] mx-auto">Email:{item?.email}</h2>
-                                <h2 className="text-start w-[90%] mx-auto">Category:{item?.Category}</h2>
-                                <div className="card-actions">
-                                    <Link to={`/doctorDetails/${item?._id}`} ><button className="btn bg-amber-300">Details</button></Link>
-                                </div>
-                            </div>
-                        </motion.div>)
-                    }
+  useEffect(() => {
+    axiospublic.get('/doctor/alldoctor').then(res => {
+      setdoctor(res?.data);
+    });
+  }, []);
 
+  return (
+    <div className="w-full min-h-screen py-16 bg-white">
+      {/* Heading */}
+      <div className="max-w-5xl mx-auto mb-12 px-4">
+        <h1 className="text-5xl font-extrabold text-yellow-500 text-center">
+          Our Expert Doctors
+        </h1>
+        <p className="text-center text-gray-600 mt-3 max-w-xl mx-auto">
+          Meet our qualified medical professionals dedicated to providing you the best healthcare services.
+        </p>
+      </div>
+
+      {/* Main content area */}
+      <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row gap-10">
+        {/* Doctors Grid */}
+        <div className="md:flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {doctors?.map(item => (
+            <motion.div
+              key={item._id}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 cursor-pointer flex flex-col"
+            >
+              <figure className="overflow-hidden rounded-t-xl h-48">
+                <img
+                  src={item?.image}
+                  alt={item?.name}
+                  className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
+                />
+              </figure>
+              <div className="p-6 flex flex-col flex-grow">
+                <h2 className="text-xl font-semibold mb-1 text-yellow-600">{item?.name}</h2>
+                <p className="text-gray-700 mb-1"><span className="font-semibold">Email:</span> {item?.email}</p>
+                <p className="text-gray-700 mb-4"><span className="font-semibold">Category:</span> {item?.Category}</p>
+                <div className="mt-auto">
+                  <Link to={`/doctorDetails/${item?._id}`}>
+                    <button className="w-full bg-yellow-400 hover:bg-yellow-500 text-white py-2 rounded-lg font-semibold shadow-md transition">
+                      View Details
+                    </button>
+                  </Link>
                 </div>
-                <div className="border-2 border-red-600 w-[20%] h-[600px] ">
-                    <h1 className="text-center text-xl font-semibold">Suggest </h1>
-                </div>
-            </div>
-
+              </div>
+            </motion.div>
+          ))}
         </div>
-    );
+
+        {/* Sidebar Suggest Section */}
+        {/* <aside className="hidden md:block w-80 border border-yellow-300 rounded-xl p-6 shadow-md bg-yellow-50">
+          <h3 className="text-xl font-bold text-yellow-600 mb-4 text-center">Suggestions</h3>
+          <ul className="space-y-3 text-gray-700">
+            <li>📌 Check doctor ratings and reviews</li>
+            <li>📌 Book appointments online</li>
+            <li>📌 Consult specialists in your area</li>
+            <li>📌 Read health tips and articles</li>
+            <li>📌 Access your medical records securely</li>
+          </ul>
+        </aside> */}
+      </div>
+    </div>
+  );
 };
 
 export default AllDoctor;

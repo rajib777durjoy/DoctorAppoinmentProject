@@ -13,7 +13,6 @@ import Protect from '../Protect/Protect';
 import AppliedList from '../pages/Admin/Component/AppliedList';
 import NewsPost from '../pages/Admin/Component/NewsPost';
 import PaymentDetails from '../pages/Admin/Component/PaymentDetails';
-import StaticsPage from '../pages/Static/StaticsPage';
 import AddCategory from '../pages/Admin/Component/AddCategory';
 import Payment from '../pages/Payment/Payment';
 import Profile from '../pages/Mamber/Component/Profile';
@@ -22,6 +21,11 @@ import AppointmentList from '../pages/Mamber/Component/AppointmentList';
 import Chat from '../pages/Mamber/Component/Chat';
 import PasentList from '../pages/Doctor/Component/PasentList';
 import DcBalance from '../pages/Doctor/Component/DcBalance';
+import DoctorHome from '../pages/Doctor/Component/DoctorHome';
+import MemberHome from '../pages/Mamber/Component/MemberHome';
+import AdminHome from '../pages/Admin/Component/AdminHome';
+import CategoryDetails from '../pages/component/Categorys/categoryDetails';
+import Profile_page from '../ProfileManagement/Profile_page';
 
 const Router = createBrowserRouter([
     {
@@ -59,6 +63,14 @@ const Router = createBrowserRouter([
             {
                 path:'/payment/:value',
                 element:<Payment></Payment>
+            },
+            {
+                path:'/categoryDetails/:category',
+                element:<CategoryDetails></CategoryDetails>
+            },
+            {
+                path:'/profile_page',
+                element:<Profile_page></Profile_page>
             }
 
         ]
@@ -68,8 +80,16 @@ const Router = createBrowserRouter([
         element:<Protect><Dashboard></Dashboard></Protect>,
         children:[
             {
-                index:true,
-                element:<StaticsPage></StaticsPage>
+                path:'adminHome',
+                element:<AdminHome></AdminHome>
+            },
+            {
+                path:'doctorHome',
+                element:<DoctorHome></DoctorHome>
+            },
+            {
+                path:'memberHome',
+                element:<MemberHome></MemberHome>
             },
             {
                 path:'addcategory',
