@@ -26,7 +26,9 @@ import MemberHome from '../pages/Mamber/Component/MemberHome';
 import AdminHome from '../pages/Admin/Component/AdminHome';
 
 import Profile_page from '../ProfileManagement/Profile_page';
-import CategoryDetails from '../Layout/Categorys/categoryDetails';
+import Categorys from '../pages/Categorys/Categorys';
+
+
 
 
 const Router = createBrowserRouter([
@@ -68,7 +70,7 @@ const Router = createBrowserRouter([
             },
             {
                 path:'/categoryDetails/:category',
-                element:<CategoryDetails></CategoryDetails>
+                element:<Categorys></Categorys>
             },
             {
                 path:'/profile_page',

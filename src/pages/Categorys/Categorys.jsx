@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import AxiosPublic from '../../Hook/AxosPublic';
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-const CategoryDetails = () => {
+const Categorys = () => {
     const { category } = useParams();
     const axiosPublic = AxiosPublic();
     const [categorys, setCategory] = useState([])
@@ -92,4 +92,4 @@ const CategoryDetails = () => {
     );
 };
 
-export default CategoryDetails;
+export default Categorys;
