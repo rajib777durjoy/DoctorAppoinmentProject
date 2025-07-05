@@ -26,7 +26,7 @@ const AuthProvider = ({children}) => {
     return signInWithEmailAndPassword(auth,email,password)
  }
  const ProfileUpdate =(displayName,photoURL)=>{
-    console.log(displayName,photoURL)
+    console.log('displayName::',displayName,photoURL)
    return updateProfile(auth.currentUser,{
         displayName:displayName,
         photoURL:photoURL
@@ -41,9 +41,7 @@ const AuthProvider = ({children}) => {
         setuser(currentuser)
         setloading(false)
         if(currentuser?.email){    
-         axiospublic.get(`/jwt/${currentuser?.email}`,{
-            withCredentials: true
-         })
+         axiospublic.get(`/jwt/${currentuser?.email}`)
          .then(res=>{
             console.log('token',res.data?.token)
             

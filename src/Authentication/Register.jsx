@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import AxiosPublic from '../Hook/AxosPublic';
 import Swal from 'sweetalert2';
 import useAuth from '../Hook/useAuth';
+import axios from 'axios';
 
 
 const image_key = import.meta.env.VITE_ImgbbAPIKey;
@@ -40,7 +41,7 @@ const Register = () => {
             image: data.image[0]
         }
 
-        const res = await axiospublic.post(image_hosting_API, imagefile, {
+        const res = await axios.post(image_hosting_API,imagefile, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
