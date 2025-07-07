@@ -4,12 +4,10 @@ import { useNavigate } from 'react-router-dom';
 
 
 const instance = axios.create({
-  baseURL: `${import.meta.env.VITE_Server_link}`,
-  // baseURL: 'http://localhost:4500',
+  baseURL:`https://doctorappoinmentserver.onrender.com`,
   withCredentials: true
 
 })
-
 
 const axiosSecure = () => {
   const { signout } = useAuth()

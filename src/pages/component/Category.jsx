@@ -25,7 +25,7 @@ const Category = () => {
             <h1 className="text-4xl font-extrabold text-yellow-600 text-center mb-12">Categories</h1>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                {category.map((item, index) => (
+                {category?.map((item, index) => (
                     <motion.div
                         key={index}
                         initial={{ opacity: 0, y: 40 }}

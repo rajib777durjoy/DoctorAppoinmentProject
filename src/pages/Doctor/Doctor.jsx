@@ -10,6 +10,9 @@ const Doctor = () => {
             <Link to='addCategory'>
                 <li className='my-2 px-3 hover:bg-slate-400 py-1 list-none'>Add Category</li>
             </Link>
+            {/* <Link to='myappoinment'>
+                <li className='my-2 px-3 hover:bg-slate-400 py-1 list-none'>My Appoinment</li>
+            </Link> */}
             <Link to='DoctorBalance'>
                 <li className='my-2 px-3 hover:bg-slate-400 py-1 list-none'>My Earnings</li>
             </Link>

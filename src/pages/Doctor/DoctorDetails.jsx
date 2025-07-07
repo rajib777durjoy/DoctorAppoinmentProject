@@ -50,7 +50,7 @@ const DoctorDetails = () => {
 
   const slots = generateTimeSlots(doctors?.StartTime ?? "10:00", doctors?.endTime ?? "13:00");
 
-  if (isLoading) return <div className="text-center text-yellow-500 text-xl mt-10">Loading doctor details...</div>;
+  
 
   return (
     <div className="max-w-7xl mx-auto my-16 px-4">

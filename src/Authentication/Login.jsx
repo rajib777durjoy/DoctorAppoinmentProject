@@ -29,7 +29,7 @@ const Login = () => {
     }
     return (
         <div className="w-[100%] py-10">
-            <div className='w-[40%] rounded-lg shadow-lg mx-auto lg:mt-10 bg-base-300 lg:px-10 lg:py-5'>
+            <div className='w-[80%] px-5 lg:w-[40%] rounded-lg shadow-lg mx-auto lg:mt-10 bg-base-300 lg:px-10 lg:py-5'>
                 <h1 className='text-2xl text-black font-extrabold text-center py-5'>Login</h1>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <fieldset className="fieldset">

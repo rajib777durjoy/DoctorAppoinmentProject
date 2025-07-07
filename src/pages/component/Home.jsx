@@ -6,6 +6,9 @@ import Category from './Category';
 import Blog from './Blog';
 import Doctors from '../Doctor/Doctors';
 import AddDoctor from '../Doctor/AddDoctor';
+import Service from './service/Service';
+import Contact from './Contact/Contact';
+import Testimonials from './Testemonial/Testimonials';
 
 const Home = () => {
     return (
@@ -17,8 +20,10 @@ const Home = () => {
             <Category></Category>
             <Doctors></Doctors>
             <About></About>
+            <Service></Service>
             <Blog></Blog>
-         
+            <Testimonials></Testimonials>
+            <Contact></Contact>
         </div>
     );
 };

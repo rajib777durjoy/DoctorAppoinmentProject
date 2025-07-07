@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import useAuth from '../../Hook/useAuth';
 import axiosSecure from '../../Hook/axiosSecure';
@@ -10,21 +10,33 @@ import Doctor from '../../pages/Doctor/Doctor';
 const Dashboard = () => {
   const { user } = useAuth();
   const AxiosSecure = axiosSecure();
+  const [role, setRole] = useState()
+  const [loading,setLoading]=useState(false)
+  useEffect(() => {
+    setLoading(true)
+    if (!user?.email) {
+      setLoading(true)
+      return;
+    }
+    AxiosSecure.get(`/verify_user/${user?.email}`)
+      .then(res => {
+        if (res.data?.role) {
+          setRole(res.data.role)
+          setLoading(false)
+        }
 
-  const { data: userVerify = {}, isPending } = useQuery({
-    queryKey: ['user-role', user?.email],
-    enabled: !!user?.email,
-    queryFn: async () => {
-      const res = await AxiosSecure(`/userverify/${user?.email}`);
-      return res.data;
-    },
-  });
+      })
+      .catch(err => {
+        console.log('error', err)
+        setLoading(false)
+      })
+  }, [user?.email])
+  const admin = role == 'admin';
+  const doctor = role == 'doctor';
+  const member = role == 'member';
+  console.log('role:', role)
 
-  const isAdmin = userVerify?.user === 'admin';
-  const isDoctor = userVerify?.user === 'doctor';
-  const isMember = userVerify?.user === 'member';
-
-  if (isPending) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-screen text-2xl font-semibold text-yellow-600">
         Loading Dashboard...
@@ -37,7 +49,7 @@ const Dashboard = () => {
       {/* Header */}
       <header className="bg-white shadow-md sticky top-0 z-50 h-[70px] flex items-center justify-between px-6 border-b border-gray-200">
         <h1 className="text-xl font-bold text-yellow-600 capitalize">
-          🩺{userVerify?.user} Dashboard
+          🩺{role} Dashboard
         </h1>
         <div className="text-gray-600 font-medium">
           Welcome, {user?.displayName || user?.email}
@@ -49,9 +61,9 @@ const Dashboard = () => {
         {/* Sidebar */}
         <aside className="w-[240px] bg-white border-r border-gray-200 p-4 shadow-md fixed top-[70px] bottom-0 z-40 overflow-y-auto">
           <nav className="space-y-6">
-            {isMember && <Mambers />}
-            {isAdmin && <Admin />}
-            {isDoctor && <Doctor />}
+            {member && <Mambers />}
+            {admin && <Admin />}
+            {doctor && <Doctor />}
           </nav>
         </aside>
 

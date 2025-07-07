@@ -7,8 +7,7 @@ import Swal from 'sweetalert2';
 const AppliedList = () => {
   const { user } = useAuth();
   const AxiosSecure = axiosSecure();
-  const [value, setValue] = useState([]);
-
+  const [value, setValue] = useState('');
   const { data: list = [], isPending, refetch } = useQuery({
     queryKey: ['applid', user?.email],
     queryFn: async () => {
@@ -20,11 +19,12 @@ const AppliedList = () => {
 
   const handleClick = async (e, applid_id) => {
     setValue(e.target.value);
+    console.log('value clicking:::',e.target.value)
     if (e.target.value) {
       const response = await AxiosSecure.patch(`/status/Update/${applid_id}`, {
         status: e.target.value,
       });
-      if (response.data.modifiedCount > 0) {
+      if (response.data.insertedId) {
         refetch();
         Swal.fire({
           position: 'top-center',
@@ -33,6 +33,7 @@ const AppliedList = () => {
           showConfirmButton: false,
           timer: 1500,
         });
+        
       }
     }
   };

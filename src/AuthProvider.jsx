@@ -6,64 +6,64 @@ import AxiosPublic from './Hook/AxosPublic';
 
 export const Auth = createContext();
 
-
-const AuthProvider = ({children}) => {
-
- const provider = new GoogleAuthProvider();
- const [user,setuser]=useState(null)
- const [loading,setloading]=useState(true)
- const axiospublic=AxiosPublic()
- const googleSign=()=>{
-     setloading(true)
-    return signInWithPopup(auth,provider)
- }
- const userSignUp = (email,password)=>{
-    setloading(true)
-    return createUserWithEmailAndPassword(auth,email,password)
- }
- const userSignIn=(email,password)=>{
-    setloading(true)
-    return signInWithEmailAndPassword(auth,email,password)
- }
- const ProfileUpdate =(displayName,photoURL)=>{
-    console.log('displayName::',displayName,photoURL)
-   return updateProfile(auth.currentUser,{
-        displayName:displayName,
-        photoURL:photoURL
-    })
- }
- const signout=()=>{
-    return signOut(auth)
- }
- useEffect(()=>{
-   const Unsubcribe = onAuthStateChanged(auth,(currentuser)=>{
-        console.log('currentuser:',currentuser)
-        setuser(currentuser)
-        setloading(false)
-        if(currentuser?.email){    
-         axiospublic.get(`/jwt/${currentuser?.email}`)
-         .then(res=>{
-            console.log('token',res.data?.token)
-            
-         }) 
-        }
-        else{
-            console.log('else function')
-            
-            axiospublic.post('/logout',{},{
-                withCredentials:true
-            })
-            .then(res=>{
-                console.log('jwt logout',res.data?.removeCookies)
-                setloading(false)
-            })
-        }
-    })
-    return ()=>{
-        Unsubcribe()
+ const AuthProvider = ({ children }) => {
+    
+    const provider = new GoogleAuthProvider();
+    const [user, setuser] = useState(null)
+    const [loading, setloading] = useState(true)
+    const axiospublic = AxiosPublic();
+   
+    const googleSign = () => {
+        setloading(true)
+        return signInWithPopup(auth, provider)
     }
- },[])
-    const info={
+    const userSignUp = (email, password) => {
+        setloading(true)
+        return createUserWithEmailAndPassword(auth, email, password)
+    }
+    const userSignIn = (email, password) => {
+        setloading(true)
+        return signInWithEmailAndPassword(auth, email, password)
+    }
+    const ProfileUpdate = (displayName, photoURL) => {
+        console.log('displayName::', displayName, photoURL)
+        return updateProfile(auth.currentUser, {
+            displayName:displayName,
+            photoURL: photoURL
+        })
+    }
+    const signout = () => {
+        return signOut(auth)
+    }
+    useEffect(() => {
+        const Unsubcribe = onAuthStateChanged(auth, (currentuser) => {
+            console.log('currentuser:', currentuser)
+            setuser(currentuser)
+            setloading(false)
+            if (currentuser?.email) {
+              
+                axiospublic.get(`/jwt/${currentuser?.email}`)
+                    .then(res => {
+                        console.log('token', res.data?.token)
+                    })
+            }
+            else {
+                console.log('else function')
+
+                axiospublic.post('/logout', {}, {
+                    withCredentials: true
+                })
+                    .then(res => {
+                        console.log('jwt logout', res.data?.removeCookies)
+                        setloading(false)
+                    })
+            }
+        })
+        return () => {
+            Unsubcribe()
+        }
+    }, [])
+    const info = {
         googleSign,
         user,
         loading,
@@ -75,7 +75,7 @@ const AuthProvider = ({children}) => {
 
     return (
         <Auth.Provider value={info}>
-          {children}
+            {children}
         </Auth.Provider>
     );
 };

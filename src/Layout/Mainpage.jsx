@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from '../Navbar/Navbar';
 import { Outlet } from 'react-router-dom';
+import Footer from './Footer/Footer';
 
 const Mainpage = () => {
     return (
@@ -8,7 +9,9 @@ const Mainpage = () => {
             {/* navbar */}
             <Navbar></Navbar>
             <Outlet></Outlet>
-            
+            <footer>
+                <Footer></Footer>
+            </footer>
         </div>
     );
 };

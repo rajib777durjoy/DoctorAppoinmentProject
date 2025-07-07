@@ -13,6 +13,9 @@ const MemberHome = () => {
  const {data:MyBookingInfo=[]}=useQuery({
     queryKey:['mybooking',user?.email],
     queryFn:async()=>{
+      if(!user?.email){
+        return ;
+      }
         const res= await AxiosSequer.get(`/mybookingInfo/${user?.email}`);
         console.log(res.data)
         return res.data

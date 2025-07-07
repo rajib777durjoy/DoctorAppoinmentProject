@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const Mambers = () => {
     return (
         <div className='w-[100%] py-4'>
-  <Link to='/dashboard/MemberHome'>
+  <Link to='MemberHome'>
     <li className='my-2 px-3 hover:bg-slate-400 py-1 list-none'>Member Dashboard</li>
   </Link>
   <Link to='doctorAdd'>

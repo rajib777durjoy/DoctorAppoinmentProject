@@ -7,6 +7,7 @@ import AxiosPublic from '../Hook/AxosPublic';
 import Swal from 'sweetalert2';
 import useAuth from '../Hook/useAuth';
 import axios from 'axios';
+import axiosSecure from '../Hook/axiosSecure';
 
 
 const image_key = import.meta.env.VITE_ImgbbAPIKey;
@@ -14,6 +15,7 @@ const image_hosting_API = `https://api.imgbb.com/1/upload?key=${image_key}`
 const Register = () => {
     const { userSignUp, ProfileUpdate, googleSign } = useAuth()
     const axiospublic = AxiosPublic()
+    const AxiosSequre= axiosSecure()
     const navigateHome = useNavigate()
     const {
         register,
@@ -25,8 +27,27 @@ const Register = () => {
 
         googleSign()
             .then(res => {
-                console.log('respons', res.user)
-                navigateHome('/')
+                console.log('respons user Info', res.user)
+                const userInfo = {
+                    name: res.user?.displayName,
+                    email: res.user?.email,
+                    image: res.user?.photoURL,
+                    role: "member",
+                }
+                axiospublic.post(`/addUser/${res?.user?.email}`, userInfo)
+                    .then(response => {
+                        navigateHome('/')
+                        Swal.fire({
+                            position: "top-center",
+                            icon: "success",
+                            title: "Google login successful",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+
+
+                    })
+
             })
             .catch(erro => {
                 console.log('error', erro)
@@ -41,7 +62,7 @@ const Register = () => {
             image: data.image[0]
         }
 
-        const res = await axios.post(image_hosting_API,imagefile, {
+        const res = await axios.post(image_hosting_API, imagefile, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -56,30 +77,32 @@ const Register = () => {
                     // console.log('res',res.user)
                     if (res.user && photoURL) {
                         console.log('register', photoURL)
-                        const userDetails = {
-                            name,
-                            email,
-                            photoURL,
-                            password,
-                            role:'member'
+                        ProfileUpdate(name, photoURL).then(() => {
+                            const userData = {
+                                name: name,
+                                email: email,
+                                photoURL: photoURL,
+                                role:'member'
+                            }
+                          
+                                console.log('userData ::',userData)
+                                AxiosSequre.post(`/addUser/${data.email}`, userData)
+                                    .then(response => {
+                                        navigateHome('/')
+                                        Swal.fire({
+                                            position: "top-center",
+                                            icon: "success",
+                                            title: "registion successful",
+                                            showConfirmButton: false,
+                                            timer: 1500
+                                        });
 
-                        }
-                        ProfileUpdate(name, photoURL)
-                        axiospublic.post(`/addUser`, userDetails)
-                            .then(response => {
-                                console.log("response", response.data)
-                                if (response.data?.insertedId) {
-                                    console.log('responst data instadnds',response.data?.insertedId)
-                                    Swal.fire({
-                                        position: "top-center",
-                                        icon: "success",
-                                        title: "Registation Done",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    navigateHome('/') 
-                                }
-                            })
+
+                                    })
+                            
+
+                        })
+
                     }
                 })
         }
@@ -87,7 +110,7 @@ const Register = () => {
     }
     return (
         <div className='w-[100%] '>
-            <div className='w-[40%] rounded-lg shadow-lg mx-auto lg:mt-10 bg-base-300 lg:px-10 lg:py-5'>
+            <div className='w-[80%] px-5 lg:w-[40%] rounded-lg shadow-lg mx-auto lg:mt-10 bg-base-300 lg:px-10 lg:py-5'>
                 <h1 className='text-2xl text-black font-extrabold text-center py-5'>Register</h1>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <fieldset className="fieldset">

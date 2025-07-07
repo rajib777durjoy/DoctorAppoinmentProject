@@ -27,6 +27,8 @@ import AdminHome from '../pages/Admin/Component/AdminHome';
 
 import Profile_page from '../ProfileManagement/Profile_page';
 import Categorys from '../pages/Categorys/Categorys';
+import Service from '../pages/component/service/Service';
+import Myappoinment from '../pages/Doctor/Component/Myappoinment';
 
 
 
@@ -63,6 +65,10 @@ const Router = createBrowserRouter([
             {
                 path:'/alldoctor',
                 element:<AllDoctor></AllDoctor>
+            },
+            {
+                path:'/service',
+                element:<Service></Service>
             },
             {
                 path:'/payment/:value',
@@ -108,6 +114,10 @@ const Router = createBrowserRouter([
               element:<DcBalance></DcBalance>
             },
             {
+                path:'myappoinment',
+                element:<Myappoinment></Myappoinment>
+            },
+            {
                 path:'applidlist',
                 element:<AppliedList></AppliedList>
             },
@@ -131,10 +141,10 @@ const Router = createBrowserRouter([
                 path:'paymentShow',
                 element:<MemberPaymentList></MemberPaymentList>
             },
-            {
-                path:'appoinmentlist',
-                element:<AppointmentList></AppointmentList>
-            },
+            // {
+            //     path:'appoinmentlist',
+            //     element:<AppointmentList></AppointmentList>
+            // },
             {
                 path:'Chat',
                 element:<Chat></Chat>
