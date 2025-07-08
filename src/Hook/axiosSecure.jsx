@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const instance = axios.create({
   baseURL:`https://doctorappoinmentserver.onrender.com`,
+  // baseURL:`http://localhost:4500`,
   withCredentials: true
 
 })

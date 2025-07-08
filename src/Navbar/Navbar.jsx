@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import logo from '../assets/doctor_2785482.png';
 import useAuth from '../Hook/useAuth';
 import axiosSecure from '../Hook/axiosSecure';
-import { useQuery } from '@tanstack/react-query';
+
 
 
 const Navbar = () => {
@@ -18,7 +18,7 @@ const Navbar = () => {
     }
     AxiosSecure.get(`/verify_user/${user?.email}`)
       .then(res => {
-        setRole(res.data.role)
+        setRole(res?.data?.role)
       })
       .catch(err => {
         console.log('error', err)
