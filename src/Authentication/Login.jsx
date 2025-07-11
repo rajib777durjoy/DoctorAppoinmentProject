@@ -6,7 +6,7 @@ import useAuth from '../Hook/useAuth';
 
 const Login = () => {
     const axiospublic = AxiosPublic()
-    const navigateHome = useNavigate()
+    const navigateToHome = useNavigate()
     const {userSignIn}=useAuth()
     const {
         register,
@@ -20,12 +20,10 @@ const Login = () => {
         if(email && password){
             userSignIn(email,password)
             .then(res=>{
-                console.log(res.user)
-                navigateHome('/')
+                console.log('login successful::',res?.user)
+               navigateToHome('/')
             })
-        }
-        
-        
+        }   
     }
     return (
         <div className="w-[100%] py-10">

@@ -16,6 +16,9 @@ const Mambers = () => {
   <Link to='appoinmentlist'>
     <li className='my-2 px-3 hover:bg-slate-400 py-1 list-none'>My Appointments</li>
   </Link>
+  <Link to='AI_Powered_Health'>
+    <li className='my-2 px-3 hover:bg-slate-400 py-1 list-none'>AI-Powered Health Checkup</li>
+  </Link>
   <Link to='/'>
     <li className='my-2 px-3 hover:bg-slate-400 py-1 list-none'>Back to Home</li>
   </Link>

@@ -13,12 +13,10 @@ const MemberHome = () => {
  const {data:MyBookingInfo=[]}=useQuery({
     queryKey:['mybooking',user?.email],
     queryFn:async()=>{
-      if(!user?.email){
-        return ;
-      }
+        console.log('dashboard email::',user?.email)
         const res= await AxiosSequer.get(`/mybookingInfo/${user?.email}`);
         console.log(res.data)
-        return res.data
+        return res?.data
     }
  })
  console.log(MyBookingInfo.length)
@@ -26,13 +24,13 @@ const MemberHome = () => {
      let value= parseInt(current.amount)
      return value + value
  },0)
- console.log('totalAmount:::',totalAmount)
+//  console.log('totalAmount:::',totalAmount)
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-yellow-600 mb-2">👋 Welcome Back, Member!</h1>
+          <h1 className="text-3xl font-bold text-yellow-600 mb-2">👋 Welcome Back,{user?.displayName}!</h1>
           <p className="text-gray-600 text-sm">Here's a quick overview of your activity and actions you can take.</p>
         </div>
 

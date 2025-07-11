@@ -38,7 +38,7 @@ const { data: totalAmountData = {}, isLoading: isAmountLoading } = useQuery({
     }
   })
 
- console.log('doctorInformation:::',DocInfo)
+//  console.log('doctorInformation:::',DocInfo)
 const {Category,pasents,PatientLimit,skill,role}=DocInfo;
 
 

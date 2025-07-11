@@ -10,7 +10,7 @@ const Navbar = () => {
   const { signout, user, loading } = useAuth();
   const navigate = useNavigate();
   const AxiosSecure = axiosSecure();
-  const [role, setRole] = useState()
+  const [role,setRole] = useState([])
 
   useEffect(() => {
     if (!user?.email) {
@@ -20,10 +20,8 @@ const Navbar = () => {
       .then(res => {
         setRole(res?.data?.role)
       })
-      .catch(err => {
-        console.log('error', err)
-      })
-  }, [user?.email])
+      
+  },[user,loading])
   const admin = role == 'admin';
   const doctor = role == 'doctor';
   const member = role == 'member';
@@ -85,7 +83,7 @@ const Navbar = () => {
           }`
         }
           >
-            Dashboard
+            Admin_Dashboard
           </NavLink>
         )}
 
@@ -99,7 +97,7 @@ const Navbar = () => {
           }`
         }
           >
-            Dashboard
+            Doctor_Dashboard
           </NavLink>
         )}
 
@@ -113,7 +111,7 @@ const Navbar = () => {
           }`
         }
           >
-            Dashboard
+            Member_Dashboard
           </NavLink>
         )}
       </div>
@@ -121,7 +119,7 @@ const Navbar = () => {
 
     </>
   );
-
+//  console.log('loading:',loading,'user_navber:::',user)
   return (
     <header className="bg-amber-400 sticky top-0  z-50 shadow-xl w-[100%] border-2">
       <nav className="w-[100%]  xl:w-[90%] mx-auto sm:px-8 md:px-2 lg:px-4  flex items-center justify-between h-16">

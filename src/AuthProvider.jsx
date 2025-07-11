@@ -22,6 +22,7 @@ const AuthProvider = ({ children }) => {
         return createUserWithEmailAndPassword(auth, email, password)
     }
     const userSignIn = (email, password) => {
+        console.log('email and password',email,password)
         setloading(true)
         return signInWithEmailAndPassword(auth, email, password)
     }
@@ -41,8 +42,7 @@ const AuthProvider = ({ children }) => {
             if (currentuser?.email) {
                 console.log('currentuser done:', currentuser)
                 setuser(currentuser)
-                const userinfo = { email:currentuser?.email}
-                axiospublic.get(`/jwt`,userinfo)
+                axiospublic.get(`/jwt/${currentuser?.email}`)
                     .then(res => {
                         console.log('token', res.data?.token)
                         setloading(false)

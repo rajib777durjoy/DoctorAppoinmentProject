@@ -29,6 +29,7 @@ import Profile_page from '../ProfileManagement/Profile_page';
 import Categorys from '../pages/Categorys/Categorys';
 import Service from '../pages/component/service/Service';
 import Myappoinment from '../pages/Doctor/Component/Myappoinment';
+import AI_powered_Checkup from '../pages/Mamber/Component/AI_powered_Checkup';
 
 
 
@@ -102,6 +103,14 @@ const Router = createBrowserRouter([
                 element:<MemberHome></MemberHome>
             },
             {
+                path:'appoinmentlist',
+                element:<AppointmentList></AppointmentList>
+            },
+            {
+              path:'AI_Powered_Health',
+              element:<AI_powered_Checkup></AI_powered_Checkup>
+            },
+            {
                 path:'addcategory',
                 element:<AddCategory></AddCategory>
             },
@@ -141,10 +150,6 @@ const Router = createBrowserRouter([
                 path:'paymentShow',
                 element:<MemberPaymentList></MemberPaymentList>
             },
-            // {
-            //     path:'appoinmentlist',
-            //     element:<AppointmentList></AppointmentList>
-            // },
             {
                 path:'Chat',
                 element:<Chat></Chat>
