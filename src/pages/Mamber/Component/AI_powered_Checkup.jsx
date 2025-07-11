@@ -7,6 +7,7 @@ import { Document, Page, Text, StyleSheet, PDFDownloadLink } from '@react-pdf/re
 import NotoSans from '../../../assets/Noto_Sans/static/NotoSans-Regular.ttf';
 import NotoSansBengali from '../../../assets/Noto_Sans_Bengali/static/NotoSansBengali-Regular.ttf';
 import NotoSansDevanagari from '../../../assets/Noto_Sans_Devanagari/static/NotoSansDevanagari-Regular.ttf';
+import Swal from 'sweetalert2';
 const AIVitalsCard = () => {
     const AxiosSequer = axiosSecure();
     const { user } = useAuth()
@@ -26,25 +27,7 @@ const AIVitalsCard = () => {
     // const [status, setStatus] = useState('');
     const [loading, setLoading] = useState(false);
     const [SelectedLang, setSelectedLang] = useState('English');
-    const [HealthInfo, setHealthInfo] = useState(`ঠিক আছে, Durjoy! 😊
-তুমি join() পুরোপুরি বুঝে গেছো — খুব ভালো! এখন যদি কখনও তোমার মনে হয়:
-
-✅ Room-based system লাগবে (chat, video call, game room)
-
-✅ Socket.io এর advanced features (authentication, security)
-
-✅ বা WebRTC integration (video/audio call)
-
-তাহলে আমাকে জানাবে।
-আর কোনো topic নিয়ে আগাতে চাও? যেমন:
-
-🔹 Private chat system
-🔹 Video calling with WebRTC
-🔹 Socket.io + JWT authentication
-🔹 MongoDB real-time sync
-🔹 React app এ socket handle করা
-
-➡️ বলো, পরবর্তী টপিক কী হবে? 🙂`)
+    const [HealthInfo, setHealthInfo] = useState(``);
 
     const handleChange = e => {
         const { name, value } = e.target;
@@ -52,7 +35,7 @@ const AIVitalsCard = () => {
     };
 
 
-   
+
     //     const h = parseFloat(data.height) / 100;
     //     const w = parseFloat(data.weight);
     //     if (h > 0 && w > 0) {
@@ -78,28 +61,28 @@ const AIVitalsCard = () => {
     //         `Your BMI is ${bmiVal} (${statusText}). Blood Pressure: ${data.bloodPressure}, Pulse: ${data.pulse}, Sugar: ${data.sugar}. AI recommends a wellness check based on these indicators.`
     //     );
     // };
-    console.log("SelectedLang", SelectedLang)
+    console.log("SelectedLang", user?.displayName)
     const handleSubmit = e => {
         e.preventDefault();
-        // setLoading(true);
+        setLoading(true);
         AxiosSequer.post(`/health/summary?language=${SelectedLang}`, data)
             .then(res => {
                 console.log('health checkup successful:::', res.data)
                 setHealthInfo(res.data)
-                // setLoading(false);
+                setLoading(false);
                 document.getElementById('my_modal_5').showModal()
             })
             .catch(erro => {
                 console.log('health checkup error:::', erro)
-                // setLoading(false);
+                setLoading(false);
             })
 
     };
-   
 
-Font.register({ family: 'NotoSansBengali', src: NotoSansBengali });
-Font.register({ family: 'NotoSansDevanagari', src: NotoSansDevanagari });
-Font.register({ family: 'NotoSans', src: NotoSans });
+
+    Font.register({ family: 'NotoSansBengali', src: NotoSansBengali });
+    Font.register({ family: 'NotoSansDevanagari', src: NotoSansDevanagari });
+    Font.register({ family: 'NotoSans', src: NotoSans });
 
     const getFontFamilyByLanguage = (lang) => {
         if (lang === 'Bangla') return 'NotoSansBengali';
@@ -110,7 +93,7 @@ Font.register({ family: 'NotoSans', src: NotoSans });
         page: {
             padding: 30,
             fontSize: 12,
-            fontFamily:getFontFamilyByLanguage(SelectedLang),
+            fontFamily: getFontFamilyByLanguage(SelectedLang),
         },
         text: {
             marginBottom: 10,
@@ -121,19 +104,29 @@ Font.register({ family: 'NotoSans', src: NotoSans });
     const handleSaveReport = async (healthInfo) => {
         console.log("healthInfo", healthInfo)
         if (user?.email) {
-            const respons = await AxiosSequer.post(`/save_report/${user?.email}`, { healthInfo })
+            const respons = await AxiosSequer.post(`/save_report/${user?.email}`, {name:user?.displayName,healthInfo})
             console.log('response from save healthInfo:', respons.data);
+            if (respons.data.insertedId) {
+                Swal.fire({
+                    position: "top-center",
+                    icon: "success",
+                    title: "Your Report has been saved",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                document.getElementById('my_modal_5').close()
+            }
         }
 
     }
 
     return (
-        <div className="min-h-screen bg-white text-gray-800 px-4 py-8 flex justify-center items-start">
-            <div className="bg-white w-full max-w-3xl p-6 rounded-xl shadow-lg border border-gray-200">
+        <div className="w-[100%] min-h-screen bg-white text-gray-800  py-8 flex  items-start">
+            <div className="bg-white w-full  p-6 rounded-xl shadow-lg  border-gray-200">
 
                 <h2 className="text-3xl font-bold text-center mb-6 text-yellow-500">🧠 AI-Powered Health Checkup</h2>
 
-                <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
                     {[
                         ['height', 'Height (cm)'],
                         ['weight', 'Weight (kg)'],
@@ -195,7 +188,7 @@ Font.register({ family: 'NotoSans', src: NotoSans });
             </div>
             {/* The button to open modal */}
             {/* Open the modal using document.getElementById('ID').showModal() method */}
-            <button className="btn" onClick={() => document.getElementById('my_modal_5').showModal()}>open modal</button>
+            {/* <button className="btn" onClick={() => document.getElementById('my_modal_5').showModal()}>open modal</button> */}
             <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
 
                 <div className="modal-box">

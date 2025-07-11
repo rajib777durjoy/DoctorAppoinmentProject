@@ -15,7 +15,7 @@ const MemberHome = () => {
     queryFn:async()=>{
         console.log('dashboard email::',user?.email)
         const res= await AxiosSequer.get(`/mybookingInfo/${user?.email}`);
-        console.log(res.data)
+        // console.log(res.data)
         return res?.data
     }
  })

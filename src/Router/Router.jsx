@@ -30,6 +30,8 @@ import Categorys from '../pages/Categorys/Categorys';
 import Service from '../pages/component/service/Service';
 import Myappoinment from '../pages/Doctor/Component/Myappoinment';
 import AI_powered_Checkup from '../pages/Mamber/Component/AI_powered_Checkup';
+import Report from '../pages/Mamber/Component/Report';
+import ReportDetails from '../pages/Mamber/Component/ReportDetails';
 
 
 
@@ -109,6 +111,14 @@ const Router = createBrowserRouter([
             {
               path:'AI_Powered_Health',
               element:<AI_powered_Checkup></AI_powered_Checkup>
+            },
+            {
+                path:'view_report',
+                element:<Report></Report>
+            },
+            {
+                path:'reportDetails/:id',
+                element:<ReportDetails></ReportDetails>
             },
             {
                 path:'addcategory',

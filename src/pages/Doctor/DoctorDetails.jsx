@@ -8,6 +8,7 @@ const DoctorDetails = () => {
   const { id } = useParams();
   const axiospublic = AxiosPublic();
   const [AppoimentDay, setAppoimentDay] = useState([]);
+  const [ActiveBtn,SetActiveBtn]=useState('')
 
   const { data: doctors = {}, isLoading } = useQuery({
     queryKey: [id, 'doctorlist'],
@@ -50,7 +51,7 @@ const DoctorDetails = () => {
 
   const slots = generateTimeSlots(doctors?.StartTime ?? "10:00", doctors?.endTime ?? "13:00");
 
-  
+  console.log(slots[0])
 
   return (
     <div className="max-w-7xl mx-auto my-16 px-4">
@@ -90,8 +91,13 @@ const DoctorDetails = () => {
             {slots.map((slot, idx) => (
               <button
                 key={idx}
-                onClick={() => setAppoimentDay([`${slot.from} - ${slot.to}`, doctors?.fee, id])}
-                className={`py-2 px-4 rounded-lg border border-yellow-400 text-yellow-700 font-semibold hover:bg-yellow-300 hover:text-white transition`}
+                onClick={()=> {
+                  setAppoimentDay([`${slot.from} - ${slot.to}`, doctors?.fee, id])
+                 
+                  SetActiveBtn(`${slot.to}`)
+                  console.log("AppoimentDay",ActiveBtn)
+                }}
+                className={`${ActiveBtn == slot.to ? 'bg-yellow-300' :'bg-yellow-100'} py-2 px-4 rounded-lg border border-yellow-400 text-yellow-700 font-semibold  hover:text-black transition`}
               >
                 {slot.from} - {slot.to}
               </button>

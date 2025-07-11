@@ -12,6 +12,7 @@ const Dashboard = () => {
   const AxiosSecure = axiosSecure();
   const [role, setRole] = useState()
   const [loading,setLoading]=useState(false)
+  const [ShowMenuBar,setShowMenuBar]=useState(true)
   useEffect(() => {
     setLoading(true)
     if (!user?.email) {
@@ -57,9 +58,18 @@ const Dashboard = () => {
       </header>
 
       {/* Body */}
-      <div className="flex flex-1">
+      <div onClick={()=>setShowMenuBar(!ShowMenuBar)} className='btn w-[90%] mx-auto mt-2 md:hidden'>Menu</div>
+      <div className="flex flex-1 justify-between ">
         {/* Sidebar */}
-        <aside className="w-[240px] bg-white border-r border-gray-200 p-4 shadow-md fixed top-[70px] bottom-0 z-40 overflow-y-auto">
+        <aside className={`${ShowMenuBar?'hidden':'md:hidden'} md:w-[20%]  lg:w-[240px] bg-white border-r border-gray-200 p-4 shadow-md fixed top-[70px] bottom-0 z-40 overflow-y-auto`}>
+          <nav className="space-y-6">
+            <div onClick={()=>setShowMenuBar(!ShowMenuBar)} className='md:hidden text-2xl btn text-red-500'>X</div>
+            {member && <Mambers />}
+            {admin && <Admin />}
+            {doctor && <Doctor />}
+          </nav>
+        </aside>
+        <aside className={`hidden md:block md:w-[20%]  lg:w-[240px] bg-white border-r border-gray-200 p-4 shadow-md fixed top-[70px] bottom-0 z-40 overflow-y-auto`}>
           <nav className="space-y-6">
             {member && <Mambers />}
             {admin && <Admin />}
@@ -68,7 +78,7 @@ const Dashboard = () => {
         </aside>
 
         {/* Main Content */}
-        <main className="ml-[240px] flex-1 p-6">
+        <main className="md:ml-[150px] lg:ml-[240px] flex-1 p-6">
           <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
             <Outlet />
           </div>
