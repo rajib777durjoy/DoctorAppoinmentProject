@@ -15,7 +15,7 @@ const Myappoinment = () => {
 
     useEffect(() => {
         if (user?.email) {
-            AxiosSecure.get(`/doctor/appointment_List/${user.email}`).then((res) => {
+            AxiosSecure.get(`/doctor/appointment_List/${user?.email}`).then((res) => {
                 setAppoinmentData(res.data);
             });
         }

@@ -122,7 +122,7 @@ const Navbar = () => {
 //  console.log('loading:',loading,'user_navber:::',user)
   return (
     <header className="bg-amber-400 sticky top-0  z-50 shadow-xl w-[100%] border-2">
-      <nav className="w-[100%]  xl:w-[90%] mx-auto sm:px-8 md:px-2 lg:px-4  flex items-center justify-between h-16">
+      <nav className="w-[100%] xl:w-[90%] mx-auto sm:px-8 md:px-2 lg:px-4  flex items-center justify-between h-16">
         {/* Logo and Title */}
         <Link
           to="/"
@@ -164,7 +164,7 @@ const Navbar = () => {
                 onClick={() => {
                   signout().then(() => navigate('/login'));
                 }}
-                className="px-5 py-2 bg-white hover:bg-yellow-400 text-black hover:text-white rounded-lg shadow-lg font-semibold transition"
+                className="px-5 py-2 hidden lg:block bg-white hover:bg-yellow-400 text-black hover:text-white rounded-lg shadow-lg font-semibold transition"
               >
                 Logout
               </button>

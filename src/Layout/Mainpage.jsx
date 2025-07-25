@@ -5,7 +5,7 @@ import Footer from './Footer/Footer';
 
 const Mainpage = () => {
     return (
-        <div>
+        <div className='w-[100%]'>
             {/* navbar */}
             <Navbar></Navbar>
             <Outlet></Outlet>
