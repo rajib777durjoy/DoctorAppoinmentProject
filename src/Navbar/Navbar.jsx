@@ -83,7 +83,7 @@ const Navbar = () => {
           }`
         }
           >
-            Admin_Dashboard
+            Dashboard
           </NavLink>
         )}
 
@@ -97,7 +97,7 @@ const Navbar = () => {
           }`
         }
           >
-            Doctor_Dashboard
+            Dashboard
           </NavLink>
         )}
 
@@ -111,7 +111,7 @@ const Navbar = () => {
           }`
         }
           >
-            Member_Dashboard
+            Dashboard
           </NavLink>
         )}
       </div>

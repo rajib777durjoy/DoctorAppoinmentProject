@@ -9,6 +9,7 @@ import {
   FaClipboardList,
 } from 'react-icons/fa';
 
+
 const AppointmentList = () => {
   const AxiosSecure = axiosSecure();
   const [appoinmentData, setAppoinmentData] = useState([]);
@@ -20,8 +21,8 @@ const AppointmentList = () => {
         setAppoinmentData(res.data);
       });
     }
-  }, [AxiosSecure, user?.email]);
-
+  }, [user?.email]);
+  console.log('appoinmentData',appoinmentData)
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4">
       <h1 className="text-3xl font-bold text-center text-amber-600 mb-8">

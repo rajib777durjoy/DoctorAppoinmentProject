@@ -12,14 +12,13 @@ const Myappoinment = () => {
     const AxiosSecure = axiosSecure();
     const [appoinmentData, setAppoinmentData] = useState([]);
     const { user } = useAuth();
-
-    useEffect(() => {
-        if (user?.email) {
-            AxiosSecure.get(`/doctor/appointment_List/${user?.email}`).then((res) => {
-                setAppoinmentData(res.data);
-            });
-        }
-    }, [AxiosSecure, user?.email]);
+    useEffect(()=>{
+        AxiosSecure(`/doctor/appointment_List/${user?.email}`)
+        .then(res=>{
+            console.log('response:::',res.data)
+            setAppoinmentData(res.data);
+        })
+    },[])
     return (
         <div className="min-h-screen bg-gray-50 py-10 px-4">
             <h1 className="text-3xl font-bold text-center text-amber-600 mb-8">

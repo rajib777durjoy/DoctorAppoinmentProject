@@ -105,10 +105,6 @@ const Router = createBrowserRouter([
                 element:<MemberHome></MemberHome>
             },
             {
-                path:'appoinmentlist',
-                element:<AppointmentList></AppointmentList>
-            },
-            {
               path:'AI_Powered_Health',
               element:<AI_powered_Checkup></AI_powered_Checkup>
             },
@@ -163,6 +159,10 @@ const Router = createBrowserRouter([
             {
                 path:'Chat',
                 element:<Chat></Chat>
+            },
+            {
+                path:'appoinmentlist',
+                element:<AppointmentList></AppointmentList>
             }
 
         ]

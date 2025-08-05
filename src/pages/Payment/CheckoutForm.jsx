@@ -86,7 +86,7 @@ const CheckoutForm = ({ price, day,id }) => {
           appliedName: user?.displayName,
           doctor_id:id
         }
-        AxiosSecure.post(`/paymentHistory/${id}`, history)
+        AxiosSecure.post(`/paymentHistory/${id}`,history)
           .then(res => {
             console.log('resposn payment:', res.data)
             if (res.data) {
