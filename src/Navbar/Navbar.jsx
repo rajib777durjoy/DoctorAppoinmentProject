@@ -121,7 +121,7 @@ const Navbar = () => {
   );
 //  console.log('loading:',loading,'user_navber:::',user)
   return (
-    <header className="bg-amber-400 sticky top-0  z-50 shadow-xl w-[100%] border-2">
+    <header className="bg-amber-400 sticky top-0  z-50 shadow-xl w-[100%]">
       <nav className="w-[100%] xl:w-[90%] mx-auto sm:px-8 md:px-2 lg:px-4  flex items-center justify-between h-16">
         {/* Logo and Title */}
         <Link
