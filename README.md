@@ -1,12 +1,95 @@
-# React + Vite
+🩺 Doctor Booking System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack Doctor Appointment Booking System that allows users to book doctor appointments online, and enables admins to manage doctors, users, and bookings efficiently.
 
-Currently, two official plugins are available:
+🚀 Live Demo
+🌐 Live Website: https://doctorproject-a4e4f.web.app
+📁 Repository
+🔗 GitHub Repo: https://github.com/rajib777durjoy/DoctorAppoinmentProject
+🧑‍💻 Project Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The Doctor Booking System is designed to simplify the process of booking doctor appointments. Users can browse available doctors, view details, and book appointments. Admins can manage doctors, users, categories, and bookings from a secure dashboard.
 
-## Expanding the ESLint configuration
+⚙️ Features
+👤 User Features
+User registration & login
+Browse doctors list
+View doctor details
+Book appointment
+View booking history
+Profile management
+🛠️ Admin Features
+Admin dashboard
+Add / update / delete doctors
+Manage users
+Manage appointments
+View reports
+Category management
+🧱 Tech Stack
+Frontend
+Next.js / React.js
+Tailwind CSS
+Axios
+Backend
+Node.js
+Express.js
+MongoDB
+JWT Authentication
+Cookies (httpOnly)
+🔐 Authentication System
+JWT-based login system
+Secure cookie authentication
+Role-based access (User / Admin)
+📊 Database Collections
+users
+doctors
+appointments
+categories
+🧪 Demo Credentials
+👤 User Login
+Email:rahul33555@gmail.com
+Password: 1122334
+🛠️ Admin Login
+Email:durjoy2001chando@gmail.com
+Password:2233445
+📦 Installation Guide
+Frontend Setup
+cd frontend
+npm install
+npm run dev
+Backend Setup
+cd backend
+npm install
+npm start
+🌐 Environment Variables
+Backend .env
+MONGO_URI=your_mongodb_uri
+JWT_SECRET=your_secret_key
+NODE_ENV=development
+📌 Project Structure
+frontend/
+  ├── pages/
+  ├── components/
+  ├── hooks/
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+backend/
+  ├── controllers/
+  ├── routes/
+  ├── models/
+  ├── middleware/
+📖 Key Highlights
+Full-stack MERN application
+Secure authentication system
+Admin & user role management
+Responsive UI design
+Real-time booking system
+👨‍💻 Developer
+Name:Durjoy Chando
+Email:durjoy2001chando@gmail.com
+Portfolio: https://portfolio-38edc.web.app/
+⭐ Future Improvements
+Payment gateway integration
+Live chat with doctors
+Email/SMS notifications
+Doctor rating system
+Advanced search & filters
