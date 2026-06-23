@@ -1,124 +1,152 @@
-import React, { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import React from 'react';
+import { useParams } from 'react-router-dom';
 import AxiosPublic from '../../Hook/AxosPublic';
-import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
+import { FaUserMd, FaMoneyBillWave, FaRegClock } from "react-icons/fa";
+import { FiUploadCloud } from "react-icons/fi";
 
 const DoctorDetails = () => {
   const { id } = useParams();
   const axiospublic = AxiosPublic();
-  const [AppoimentDay, setAppoimentDay] = useState([]);
-  const [ActiveBtn,SetActiveBtn]=useState('')
 
-  const { data: doctors = {}, isLoading } = useQuery({
-    queryKey: [id, 'doctorlist'],
+  const active = true;
+
+  const { data: doctor = {} } = useQuery({
+    queryKey: ['doctor', id],
     queryFn: async () => {
       const res = await axiospublic.get(`/doctor/details/${id}`);
       return res.data;
     },
   });
 
-  // Generate time slots function (keep as is)
-  function generateTimeSlots(startTime, endTime, slotMinutes = 30) {
-    const [startHour, startMinute] = startTime.split(':').map(Number);
-    const [endHour, endMinute] = endTime.split(':').map(Number);
-    const slots = [];
-    let current = new Date();
-    current.setHours(startHour, startMinute, 0, 0);
-    const end = new Date();
-    end.setHours(endHour, endMinute, 0, 0);
-
-    while (current < end) {
-      const slotStart = new Date(current);
-      current.setMinutes(current.getMinutes() + slotMinutes);
-      const slotEnd = new Date(current);
-
-      slots.push({
-        from: slotStart.toLocaleTimeString('en-US', {
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true,
-        }),
-        to: slotEnd.toLocaleTimeString('en-US', {
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true,
-        }),
-      });
-    }
-    return slots;
-  }
-
-  const slots = generateTimeSlots(doctors?.StartTime ?? "10:00", doctors?.endTime ?? "13:00");
-
-  console.log(slots[0])
-
   return (
-    <div className="max-w-7xl mx-auto my-16 px-4">
-      <h1 className="text-4xl font-extrabold text-yellow-600 text-center mb-10">Doctor Details</h1>
+    <section className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 py-8 sm:py-12">
 
-      <div className="flex flex-col md:flex-row gap-12">
-        {/* Left Section - Image + Description */}
-        <div className="md:w-1/2 rounded-lg shadow-lg overflow-hidden border border-yellow-300">
+      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+
+        {/* LEFT - DOCTOR PROFILE */}
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="bg-white rounded-2xl sm:rounded-3xl shadow-md border border-blue-100 overflow-hidden"
+        >
           <img
-            src={doctors?.image}
-            alt={`Dr. ${doctors?.name}`}
-            className="w-full h-96 object-cover"
+            src={doctor?.image}
+            className="w-full h-56 sm:h-64 md:h-72 object-cover"
+            alt="doctor"
           />
-          <div className="p-6 bg-yellow-50">
-            <h2 className="text-xl font-semibold text-yellow-700 mb-3 text-center">Description</h2>
-            <p className="text-gray-700 leading-relaxed">{doctors?.description}</p>
-          </div>
-        </div>
 
-        {/* Right Section - Info + Time Slots + Button */}
-        <div className="md:w-1/2 flex flex-col bg-white border border-yellow-300 rounded-lg shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-yellow-600 mb-3">Dr. {doctors?.name}</h2>
+          <div className="p-4 sm:p-6">
 
-          <div className="mb-6 space-y-2 text-gray-700">
-            <p><span className="font-semibold">Registration No:</span> {doctors?.Register}</p>
-            <p><span className="font-semibold">Email:</span> {doctors?.email}</p>
-            <p><span className="font-semibold">Category:</span> {doctors?.Category}</p>
-            <p><span className="font-semibold">Consultation Fee:</span> <span className="text-yellow-600 font-bold">${doctors?.fee}</span></p>
-            <p><span className="font-semibold">Patient Limit Per Day:</span> {doctors?.PatientLimit}</p>
-            <p><span className="font-semibold">Working Hours:</span> {doctors?.StartTime} - {doctors?.endTime}</p>
-          </div>
+            <div className="flex items-center gap-2 text-blue-600">
+              <FaUserMd />
+              <span className="font-semibold">Doctor Profile</span>
+            </div>
 
-          <hr className="border-yellow-300 mb-6" />
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mt-2">
+              {doctor?.name}
+            </h2>
 
-          <h3 className="text-xl font-semibold text-yellow-600 mb-4">Available Appointment Slots</h3>
-          <div className="grid grid-cols-2 gap-4 mb-8">
-            {slots.map((slot, idx) => (
-              <button
-                key={idx}
-                onClick={()=> {
-                  setAppoimentDay([`${slot.from} - ${slot.to}`, doctors?.fee, id])
-                 
-                  SetActiveBtn(`${slot.to}`)
-                  console.log("AppoimentDay",ActiveBtn)
-                }}
-                className={`${ActiveBtn == slot.to ? 'bg-yellow-300' :'bg-yellow-100'} py-2 px-4 rounded-lg border border-yellow-400 text-yellow-700 font-semibold  hover:text-black transition`}
-              >
-                {slot.from} - {slot.to}
+            <p className="text-sm text-gray-500 mt-2 leading-relaxed">
+              {doctor?.description}
+            </p>
+
+            <div className="mt-5 space-y-2 text-sm text-gray-600">
+
+              <p>📌 Registration: <b>{doctor?.Register}</b></p>
+              <p>📧 Email: <b className="break-all">{doctor?.email}</b></p>
+              <p>🩺 Category: <b>{doctor?.Category}</b></p>
+
+              <div className="flex items-center gap-2">
+                <FaMoneyBillWave className="text-blue-600" />
+                <span>Fee: <b>${doctor?.fee}</b></span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <FaRegClock className="text-blue-600" />
+                <span>
+                  Time: <b>{doctor?.StartTime} - {doctor?.endTime}</b>
+                </span>
+              </div>
+
+            </div>
+
+            {active ? (
+              <button className="mt-6 w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition shadow-md">
+                <FiUploadCloud className="text-lg" />
+                Upload Necessary Documents
               </button>
-            ))}
+            ) : (
+              <p className="mt-6 text-red-500 text-center text-sm">
+                Doctor is currently not available
+              </p>
+            )}
+
+          </div>
+        </motion.div>
+
+        {/* RIGHT SIDE - DOCUMENTS + SUMMARY */}
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="lg:col-span-2 space-y-6"
+        >
+
+          {/* DOCUMENTS */}
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-md border border-blue-100 p-4 sm:p-6">
+
+            <h3 className="text-lg sm:text-xl font-bold text-blue-700 mb-4">
+              Patient Documents
+            </h3>
+
+            <div className="grid sm:grid-cols-2 gap-3 text-sm">
+
+              <div className="p-3 rounded-xl bg-blue-50 border border-blue-100">
+                📄 Prescription.pdf
+              </div>
+
+              <div className="p-3 rounded-xl bg-blue-50 border border-blue-100">
+                🧪 Blood_Report.pdf
+              </div>
+
+              <div className="p-3 rounded-xl bg-blue-50 border border-blue-100">
+                🩻 X-Ray_Image.png
+              </div>
+
+              <div className="p-3 rounded-xl bg-blue-50 border border-blue-100">
+                📊 Lab_Result.pdf
+              </div>
+
+            </div>
+
           </div>
 
-          <Link to={`/payment/${AppoimentDay}`}>
-            <button
-              disabled={AppoimentDay.length === 0}
-              className={`w-full py-3 rounded-lg font-bold transition ${
-                AppoimentDay.length === 0
-                  ? 'bg-yellow-200 text-yellow-500 cursor-not-allowed'
-                  : 'bg-yellow-400 hover:bg-yellow-500 text-white'
-              }`}
-            >
-              Book Appointment
-            </button>
-          </Link>
-        </div>
+          {/* BOOKING SUMMARY CARD */}
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-md border border-blue-100 p-5 sm:p-6">
+
+            <h3 className="text-lg sm:text-xl font-bold text-blue-700 mb-3">
+              Appointment Summary
+            </h3>
+
+            <p className="text-sm text-gray-500">
+              You can book an appointment with Dr. {doctor?.name}.
+              Please ensure all required documents are uploaded before booking.
+            </p>
+            {active && <button className="mt-5 w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition shadow-md">
+              Confirm Booking
+            </button> || <p className="mt-6 text-red-500 text-center text-sm">
+                Doctor is currently not available
+              </p>
+            }
+
+
+          </div>
+
+        </motion.div>
+
       </div>
-    </div>
+    </section>
   );
 };
 

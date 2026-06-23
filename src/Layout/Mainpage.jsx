@@ -4,6 +4,7 @@ import { Outlet } from 'react-router-dom';
 import Footer from './Footer/Footer';
 
 const Mainpage = () => {
+
     return (
         <div className='w-[100%]'>
             {/* navbar */}
@@ -12,6 +13,7 @@ const Mainpage = () => {
             <footer>
                 <Footer></Footer>
             </footer>
+            
         </div>
     );
 };

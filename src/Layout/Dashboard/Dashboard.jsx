@@ -1,8 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import useAuth from '../../Hook/useAuth';
 import axiosSecure from '../../Hook/axiosSecure';
+
 import Admin from '../../pages/Admin/Admin';
 import Mambers from '../../pages/Mamber/Component/Mambers';
 import Doctor from '../../pages/Doctor/Doctor';
@@ -10,78 +11,110 @@ import Doctor from '../../pages/Doctor/Doctor';
 const Dashboard = () => {
   const { user } = useAuth();
   const AxiosSecure = axiosSecure();
-  const [role, setRole] = useState()
-  const [loading,setLoading]=useState(false)
-  const [ShowMenuBar,setShowMenuBar]=useState(true)
+
+  const [role, setRole] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+
   useEffect(() => {
-    setLoading(true)
-    if (!user?.email) {
-      setLoading(true)
-      return;
-    }
+    if (!user?.email) return;
+
+    setLoading(true);
+
     AxiosSecure.get(`/verify_user/${user?.email}`)
       .then(res => {
-        if (res.data?.role) {
-          setRole(res.data.role)
-          setLoading(false)
-        }
-
+        setRole(res.data?.role);
       })
       .catch(err => {
-        console.log('error', err)
-        setLoading(false)
+        console.log(err);
       })
-  }, [user?.email])
-  const admin = role == 'admin';
-  const doctor = role == 'doctor';
-  const member = role == 'member';
-  console.log('role:', role)
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [user?.email]);
+
+  const isAdmin = role === 'admin';
+  const isDoctor = role === 'doctor';
+  const isMember = role === 'member';
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen text-2xl font-semibold text-yellow-600">
+      <div className="h-screen flex items-center justify-center text-yellow-600 text-xl font-semibold">
         Loading Dashboard...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
-      {/* Header */}
-      <header className="bg-white shadow-md sticky top-0 z-50 h-[70px] flex items-center justify-between px-6 border-b border-gray-200">
-        <h1 className="text-xl font-bold text-yellow-600 capitalize">
-          🩺{role} Dashboard
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+
+      {/* TOP BAR */}
+      <header className="h-[70px] bg-white shadow-sm flex items-center justify-between px-6 sticky top-0 z-50">
+
+        <button
+          onClick={() => setOpen(true)}
+          className="md:hidden bg-yellow-500 text-white px-3 py-1 rounded-lg"
+        >
+          ☰
+        </button>
+
+        <h1 className="text-lg font-bold text-blue-600 capitalize">
+          🩺 {role} Dashboard
         </h1>
-        <div className="text-gray-600 font-medium">
+
+        <div className="text-sm text-gray-600 hidden md:block">
           Welcome, {user?.displayName || user?.email}
         </div>
       </header>
 
-      {/* Body */}
-      <div onClick={()=>setShowMenuBar(!ShowMenuBar)} className='btn w-[90%] mx-auto mt-2 md:hidden'>Menu</div>
-      <div className="flex flex-1 justify-between ">
-        {/* Sidebar */}
-        <aside className={`${ShowMenuBar?'hidden':'md:hidden'} md:w-[20%]  lg:w-[240px] bg-white border-r border-gray-200 p-4 shadow-md fixed top-[70px] bottom-0 z-40 overflow-y-auto`}>
-          <nav className="space-y-6">
-            <div onClick={()=>setShowMenuBar(!ShowMenuBar)} className='md:hidden text-2xl btn text-red-500'>X</div>
-            {member && <Mambers />}
-            {admin && <Admin />}
-            {doctor && <Doctor />}
-          </nav>
-        </aside>
-        <aside className={`hidden md:block md:w-[20%]  lg:w-[240px] bg-white border-r border-gray-200 p-4 shadow-md fixed top-[70px] bottom-0 z-40 overflow-y-auto`}>
-          <nav className="space-y-6">
-            {member && <Mambers />}
-            {admin && <Admin />}
-            {doctor && <Doctor />}
+      {/* BODY */}
+      <div className="flex flex-1">
+
+        {/* OVERLAY */}
+        {open && (
+          <div
+            onClick={() => setOpen(false)}
+            className="fixed inset-0 bg-black/40 z-40 md:hidden"
+          />
+        )}
+
+        {/* SIDEBAR */}
+        <aside
+          className={`
+            fixed md:static z-50  top-0 left-0 h-full
+            w-[260px] bg-white  shadow-lg
+            transform transition-transform duration-300
+            ${open ? 'translate-x-0' : '-translate-x-full'}
+            md:translate-x-0
+          `}
+        >
+
+          {/* close button mobile */}
+          <div className="md:hidden p-4 border-b">
+            <button
+              onClick={() => setOpen(false)}
+              className="text-red-500 font-bold"
+            >
+              ✕ Close
+            </button>
+          </div>
+
+          <nav className="p-4 space-y-2">
+
+            {isMember && <Mambers />}
+            {isAdmin && <Admin />}
+            {isDoctor && <Doctor />}
+
           </nav>
         </aside>
 
-        {/* Main Content */}
-        <main className="md:ml-[150px] lg:ml-[240px] flex-1 p-6">
-          <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+        {/* MAIN CONTENT */}
+        <main className="flex-1 md:ml-0 p-6">
+
+          <div className="bg-white rounded-2xl shadow-sm  p-6 min-h-screen">
             <Outlet />
           </div>
+
         </main>
       </div>
     </div>

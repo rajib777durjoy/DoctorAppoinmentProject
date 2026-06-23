@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const Admin = () => {
     return (
-        <div className='w-[100%] py-4'>
+        <div className='w-[100%] py-4 border-2 bg-amber-400'>
             <Link to='/dashboard/AdminHome'>
                 <li className='my-2 px-3 hover:bg-slate-400 py-1 list-none'>Admin Dashboard</li>
             </Link>

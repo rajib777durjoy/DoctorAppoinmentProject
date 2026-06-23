@@ -1,11 +1,11 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import '../../../index.css';
+import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import 'swiper/css';
 
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+
 import bannerimg from '/close-up-medical-team-ready-work.jpg';
 import bannerimg2 from '/doctor-nurses-special-equipment.jpg';
 import bannerimg3 from '/portrait-hardworking-female-doctors.jpg';
@@ -16,27 +16,27 @@ const slides = [
     img: bannerimg,
     title: "Committed to Your Health",
     subtitle: "Expert medical care with compassion and excellence.",
-    buttonText: "Book an Appointment",
-    buttonLink: "/appointment"
+    buttonText: "Book Appointment",
+    buttonLink: "/dashboard/memberHome"
   },
   {
     img: bannerimg2,
-    title: "Advanced Medical Equipment",
-    subtitle: "State-of-the-art technology for accurate diagnosis.",
-    buttonText: "Learn More",
+    title: "Advanced Medical Technology",
+    subtitle: "State-of-the-art tools for accurate diagnosis and treatment.",
+    buttonText: "Explore Services",
     buttonLink: "/services"
   },
   {
     img: bannerimg3,
-    title: "Dedicated Healthcare Professionals",
-    subtitle: "Caring hands you can trust in every step.",
-    buttonText: "Meet Our Team",
+    title: "Expert Healthcare Team",
+    subtitle: "Experienced doctors dedicated to your wellbeing.",
+    buttonText: "Meet Doctors",
     buttonLink: "/doctors"
   },
   {
     img: bannerimg4,
-    title: "Your Health, Our Priority",
-    subtitle: "Providing quality care in a comfortable environment.",
+    title: "Care You Can Trust",
+    subtitle: "Providing safe, reliable and patient-first healthcare.",
     buttonText: "Contact Us",
     buttonLink: "/contact"
   },
@@ -44,44 +44,74 @@ const slides = [
 
 const Banner = () => {
   return (
-    <div className="w-full min-h-[500px] rounded-lg overflow-hidden shadow-lg relative max-w-7xl mx-auto mt-8">
-      <Swiper
-        spaceBetween={30}
-        centeredSlides={true}
-        autoplay={{
-          delay: 3500,
-          disableOnInteraction: false,
-        }}
-        pagination={{ clickable: true }}
-        navigation={true}
-        modules={[Autoplay, Pagination, Navigation]}
-        className="h-[500px]"
-      >
-        {slides.map(({ img, title, subtitle, buttonText, buttonLink }, index) => (
-          <SwiperSlide key={index} className="relative">
-            <img
-              src={img}
-              alt={title}
-              className="object-cover w-full h-[500px] brightness-75 transition-transform duration-700 hover:scale-105"
-            />
-            {/* Overlay gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+    <section className="max-w-7xl mx-auto mt-10 px-4">
 
-            {/* Text content */}
-            <div className="absolute bottom-16 left-10 max-w-lg text-white">
-              <h2 className="text-3xl md:text-4xl font-extrabold mb-3 drop-shadow-lg">{title}</h2>
-              <p className="text-sm md:text-lg mb-5 drop-shadow-md">{subtitle}</p>
-              <a
-                href={buttonLink}
-                className="inline-block bg-amber-400 hover:bg-amber-500 text-black font-semibold px-6 py-3 rounded-md shadow-md transition"
-              >
-                {buttonText}
-              </a>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </div>
+      <div className="rounded-3xl overflow-hidden shadow-2xl border border-blue-100">
+
+        <Swiper
+          spaceBetween={30}
+          centeredSlides={true}
+          autoplay={{
+            delay: 4000,
+            disableOnInteraction: false,
+          }}
+          pagination={{ clickable: true }}
+          navigation={true}
+          modules={[Autoplay, Pagination, Navigation]}
+          className="h-[520px]"
+        >
+
+          {slides.map((slide, index) => (
+            <SwiperSlide key={index} className="relative">
+
+              {/* IMAGE */}
+              <img
+                src={slide.img}
+                alt={slide.title}
+                className="w-full h-[520px] object-cover"
+              />
+
+              {/* BLUE OVERLAY */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 via-blue-800/40 to-transparent"></div>
+
+              {/* CONTENT CARD */}
+              <div className="absolute inset-0 flex items-center">
+
+                <div className="max-w-xl ml-10 md:ml-20">
+
+                  <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 shadow-lg">
+
+                    <p className="text-blue-200 uppercase tracking-wider text-sm font-semibold">
+                      Dr.Meet Healthcare
+                    </p>
+
+                    <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight mt-2">
+                      {slide.title}
+                    </h2>
+
+                    <p className="text-blue-100 mt-4 text-sm md:text-base">
+                      {slide.subtitle}
+                    </p>
+
+                    <a
+                      href={slide.buttonLink}
+                      className="inline-block mt-6 bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition"
+                    >
+                      {slide.buttonText}
+                    </a>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </SwiperSlide>
+          ))}
+
+        </Swiper>
+      </div>
+    </section>
   );
 };
 

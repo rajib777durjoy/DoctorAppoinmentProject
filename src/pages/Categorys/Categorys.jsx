@@ -1,95 +1,123 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import AxiosPublic from '../../Hook/AxosPublic';
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
+
 const Categorys = () => {
-    const { category } = useParams();
-    const axiosPublic = AxiosPublic();
-    const [categorys, setCategory] = useState([])
+  const { category } = useParams();
+  const axiosPublic = AxiosPublic();
+  const [doctors, setDoctors] = useState([]);
 
-    console.log(category)
-    useEffect(() => {
-        const categoryfun = async () => {
-            const res = await axiosPublic.get(`/categroy/query?name=${category}`)
-            console.log(res.data)
-            setCategory(res.data)
-        }
-        categoryfun()
-    }, [category])
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      const res = await axiosPublic.get(`/categroy/query?name=${category}`);
+      setDoctors(res.data);
+    };
+    fetchDoctors();
+  }, [category]);
 
+  return (
+    <section className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-14 px-4">
 
-    return (
-        <div>
-            <div className="w-[90%] mx-auto my-10">
-                <h1 className="text-3xl font-bold mb-6 text-yellow-600"> Doctors by Category</h1>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                   {categorys?.map(item=><motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4 }}
-                        className="bg-white border border-yellow-200 rounded-xl shadow-sm hover:shadow-md transition duration-300 flex flex-col"
-                    >
-                        {/* Doctor Image */}
-                        <figure className="w-full h-60 overflow-hidden rounded-t-xl">
-                            <img
-                                src={item.image}
-                                alt={item.name}
-                                className="w-full h-full object-cover"
-                            />
-                        </figure>
+      {/* HEADER */}
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-extrabold text-gray-800">
+          {category} Specialists
+        </h1>
+        <p className="text-gray-500 mt-2">
+          Find and book the best doctors in this category
+        </p>
+      </div>
 
-                        {/* Doctor Info */}
-                        <div className="p-4 flex-1 flex flex-col justify-between">
-                            <div>
-                                <h2 className="text-xl font-bold text-gray-800 mb-1">
-                                    {item.name}
-                                </h2>
-                                <p className="text-sm text-gray-500 mb-2">{item.email}</p>
-                                <p className="text-sm text-gray-600">
-                                    <span className="font-medium text-gray-700">Specialist: </span>
-                                    {item.Category}
-                                </p>
-                                <p className="text-sm text-gray-600 mb-2">
-                                    <span className="font-medium text-gray-700">Fee: </span>৳{item.fee}
-                                </p>
-                                <p className="text-gray-600 text-sm line-clamp-2">{item.description}</p>
-                            </div>
+      {/* GRID */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
-                            {/* Skills, Days, Status */}
-                            <div className="mt-4 flex flex-wrap gap-2">
-                                <span className="bg-yellow-100 text-yellow-700 text-xs px-3 py-1 rounded-full">
-                                    {item.status === 'Inprogres' ? 'Active' : item.status}
-                                </span>
-                                {item.skill.map((s, i) => (
-                                    <span key={i} className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">
-                                        {s}
-                                    </span>
-                                ))}
-                            </div>
+        {doctors?.map((item, index) => (
+          <motion.div
+            key={item._id}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: index * 0.1 }}
+            className="bg-white border border-blue-100 rounded-2xl shadow-sm hover:shadow-xl transition duration-300 overflow-hidden hover:-translate-y-1"
+          >
 
-                            <div className="mt-2 flex flex-wrap gap-1">
-                                {item.day.map((day, idx) => (
-                                    <span key={idx} className="bg-blue-50 text-blue-600 text-xs px-2 py-0.5 rounded-full">
-                                        {day}
-                                    </span>
-                                ))}
-                            </div>
+            {/* IMAGE */}
+            <div className="relative h-56 overflow-hidden">
+              <img
+                src={item.image}
+                alt={item.name}
+                className="w-full h-full object-cover"
+              />
 
-                            {/* View Button */}
-                            <div className="mt-4">
-                                <Link to={`/doctorDetails/${item._id}`}>
-                                    <button className="w-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-2 rounded-lg transition">
-                                        View Details
-                                    </button>
-                                </Link>
-                            </div>
-                        </div>
-                    </motion.div>) }
-                </div>
+              {/* STATUS BADGE */}
+              <div className="absolute top-3 right-3">
+                <span className={`px-3 py-1 text-xs rounded-full font-medium ${
+                  item.status === 'done'
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-blue-100 text-blue-700'
+                }`}>
+                  {item.status === 'done' ? 'Available' : 'Pending'}
+                </span>
+              </div>
             </div>
-        </div>
-    );
+
+            {/* CONTENT */}
+            <div className="p-5">
+
+              <h2 className="text-xl font-bold text-gray-800">
+                Dr. {item.name}
+              </h2>
+
+              <p className="text-sm text-gray-500">{item.email}</p>
+
+              <div className="mt-2 text-sm text-gray-600">
+                <p>
+                  <span className="font-semibold">Specialist:</span> {item.Category}
+                </p>
+                <p>
+                  <span className="font-semibold">Fee:</span> ৳{item.fee}
+                </p>
+              </div>
+
+              {/* SKILLS */}
+              <div className="flex flex-wrap gap-2 mt-3">
+                {item.skill?.map((s, i) => (
+                  <span
+                    key={i}
+                    className="bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded-full"
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+
+              {/* DAYS */}
+              <div className="flex flex-wrap gap-2 mt-2">
+                {item.day?.map((d, i) => (
+                  <span
+                    key={i}
+                    className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full"
+                  >
+                    {d}
+                  </span>
+                ))}
+              </div>
+
+              {/* BUTTON */}
+              <Link to={`/doctorDetails/${item._id}`}>
+                <button className="mt-5 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition">
+                  View Profile
+                </button>
+              </Link>
+
+            </div>
+          </motion.div>
+        ))}
+
+      </div>
+    </section>
+  );
 };
 
 export default Categorys;

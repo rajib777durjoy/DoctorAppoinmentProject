@@ -1,69 +1,100 @@
 import React, { useEffect, useState } from 'react';
 import AxiosPublic from '../../Hook/AxosPublic';
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { Link } from 'react-router-dom';
+import { FaUserMd, FaStethoscope } from "react-icons/fa";
 
 const Doctors = () => {
-  const [doctor, setdoctor] = useState([]);
+  const [doctor, setDoctor] = useState([]);
   const axiospublic = AxiosPublic();
 
   useEffect(() => {
     axiospublic.get('/doctorlist')
-      .then(res => {
-        setdoctor(res.data);
-      });
+      .then(res => setDoctor(res.data))
+      .catch(err => console.log(err));
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto my-16 px-4">
-      <h1 className="text-4xl font-extrabold text-yellow-600 text-center mb-12">Our Expert Doctors</h1>
+    <section className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50 py-20">
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {doctor?.map((item, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="bg-white rounded-2xl shadow-md hover:shadow-xl border border-yellow-300 flex flex-col items-center p-6 transition-transform duration-300 hover:scale-105"
-          >
-            {/* Profile Image */}
-            <figure className="relative w-32 h-32 mb-4">
-              <img
-                src={item?.image}
-                alt={item?.name}
-                className="rounded-full w-full h-full object-fill border-4 border-yellow-400"
-              />
-              <span className="absolute bottom-0 right-0 bg-green-500 border-white border-2 w-4 h-4 rounded-full"></span>
-            </figure>
+      {/* HEADER */}
+      <div className="text-center mb-14 px-4">
+        <FaUserMd className="text-blue-600 text-4xl mx-auto mb-3" />
 
-            {/* Name */}
-            <h2 className="text-xl font-bold text-gray-800 text-center mb-1">{item?.name}</h2>
+        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">
+          Our Expert Doctors
+        </h1>
 
-            {/* Specialization or Category */}
-            {item?.Category && (
-              <p className="text-sm text-yellow-600 font-medium bg-yellow-100 px-3 py-1 rounded-full mb-2">
-                {item?.Category}
-              </p>
-            )}
-
-            {/* Short Description */}
-            <p className="text-gray-600 text-sm text-center mb-4 line-clamp-3 h-[72px]">
-              {item?.description?.slice(0, 100)}...
-            </p>
-
-            {/* Action Button */}
-            <Link to={`/doctorDetails/${item?._id}`} className="w-full">
-              <button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded-full transition duration-200 shadow-sm hover:shadow-lg">
-                View Profile
-              </button>
-            </Link>
-          </motion.div>
-        ))}
+        <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
+          Meet our experienced medical professionals dedicated to providing the best healthcare service.
+        </p>
       </div>
 
-    </div>
+      {/* GRID */}
+      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+
+        {doctor?.map((item, index) => (
+          <motion.div
+            key={item._id || index}
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: index * 0.05 }}
+            className="group bg-white border border-blue-100 rounded-2xl shadow-sm hover:shadow-xl transition overflow-hidden"
+          >
+
+            {/* TOP GRADIENT */}
+            <div className="h-20 bg-gradient-to-r from-blue-500 to-blue-700"></div>
+
+            {/* IMAGE */}
+            <div className="flex justify-center -mt-10">
+              <div className="relative">
+                <img
+                  src={item?.image}
+                  alt={item?.name}
+                  className="w-24 h-24 rounded-full border-4 border-white object-cover shadow-md"
+                />
+
+                {/* online status */}
+                <span className="absolute bottom-2 right-2 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></span>
+              </div>
+            </div>
+
+            {/* CONTENT */}
+            <div className="p-5 text-center">
+
+              <h2 className="text-lg font-bold text-gray-800">
+                {item?.name}
+              </h2>
+
+              {/* SPECIALIZATION */}
+              {item?.Category && (
+                <div className="flex items-center justify-center gap-1 mt-2">
+                  <FaStethoscope className="text-blue-500 text-sm" />
+                  <span className="text-sm text-blue-600 font-medium">
+                    {item?.Category}
+                  </span>
+                </div>
+              )}
+
+              {/* DESCRIPTION */}
+              <p className="text-sm text-gray-500 mt-3 line-clamp-3">
+                {item?.description?.slice(0, 90)}...
+              </p>
+
+              {/* BUTTON */}
+              <Link to={`/doctorDetails/${item?._id}`}>
+                <button className="mt-5 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-full transition shadow-md">
+                  View Profile
+                </button>
+              </Link>
+
+            </div>
+
+          </motion.div>
+        ))}
+
+      </div>
+    </section>
   );
 };
 

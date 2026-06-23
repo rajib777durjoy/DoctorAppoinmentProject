@@ -3,153 +3,164 @@ import useAuth from '../Hook/useAuth';
 import { auth } from '../firebase.config';
 import { updateProfile } from 'firebase/auth';
 import axios from 'axios';
-import AxiosPublic from '../Hook/AxosPublic';
 import axiosSecure from '../Hook/axiosSecure';
 import Swal from 'sweetalert2';
 
-
 const Profile_page = () => {
-    const cloudName = 'dwmkakht7';
-    const { user } = useAuth();
-    const [imagePreview, setImagePreview] = useState(user?.photoURL);;
-    const [Image, setImageUrl] = useState('');
-    const AxiosSecure = axiosSecure();
-    const [loading,setLoading]=useState(false)
+  const cloudName = 'dwmkakht7';
+  const { user } = useAuth();
+  const AxiosSecure = axiosSecure();
 
+  const [imagePreview, setImagePreview] = useState(user?.photoURL);
+  const [imageUrl, setImageUrl] = useState('');
+  const [loading, setLoading] = useState(false);
 
-     if(loading){
-        return <div className='text-center mt-20'>Profile Loading...</div>
-     }
+  // Upload image to cloudinary
+  const handleChange = async (e) => {
+    const imageFile = e.target.files[0];
 
-    const handleChange = async (e) => {
-        const imageFile = e.target.files[0];
-        console.log(imageFile)
-        const formData = new FormData();
-        formData.append('file', imageFile);
-        formData.append('upload_preset', 'DoctorMeer');
-        console.log('formData', formData)
-        const res = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, // your cloud name here
-            formData
-        );
+    const formData = new FormData();
+    formData.append('file', imageFile);
+    formData.append('upload_preset', 'DoctorMeer');
 
-        setImageUrl(res.data.secure_url);
-        console.log('image upload done:', res)
-    }
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setLoading(true)
-        // TODO: Add your API integration logic here
-        // console.log('Updated profile:', formData);
-        const name = e.target.name.value;
-        const phone = e.target.phone.value;
-        const bio = e.target.bio.value;
-        console.log('user identy:::', name, phone, bio)
-
-        updateProfile(auth.currentUser, {
-            displayName: name, photoURL: Image
-        }).then(() => {
-            // Profile updated!
-            console.log('successful profiel update:::')
-            setImagePreview(Image)
-            const updatedUser = {
-                name,
-                phone,
-                bio,
-                photoURL: Image,
-            };
-            AxiosSecure.put(`/user_profile_update_to_DB/${user?.email}`,updatedUser)
-                .then(res => {
-                    console.log('profile update successful', res.data)
-                    if (res?.data) {
-                        Swal.fire({
-                            position: "top-center",
-                            icon: "success",
-                            title: "Update successful",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                       setImageUrl('')
-                       setLoading(false)
-                    }
-                })
-            // ...
-        }).catch((error) => {
-            // An error occurred
-            setLoading(false)
-            // ...
-        });
-    };
-     
-    console.log('verify user:::',user)
-    return (
-        <div className="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-lg mt-10 border border-yellow-400">
-            <h2 className="text-3xl font-bold mb-6 text-yellow-600 text-center">👤 Update Profile</h2>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Profile Photo */}
-                <div className="flex flex-col items-center">
-                    <img
-                        src={user?.photoURL}
-                        alt="Profile Preview"
-                        className="w-32 h-32 rounded-full border-4 border-yellow-400 object-cover mb-2"
-                    />
-                    <input
-                        type="file"
-                        accept="image/*"
-                        name="image"
-                        onChange={handleChange}
-                        className="file-input file-input-bordered file-input-warning w-full max-w-xs"
-                    />
-                </div>
-
-                {/* Name */}
-                <div>
-                    <label className="block mb-1 font-semibold text-gray-700">Full Name</label>
-                    <input
-                        type="text"
-                        name="name"
-                        // value={}
-                        className="w-full p-3 rounded border border-yellow-300 focus:outline-yellow-500"
-                        placeholder="Enter your full name"
-                        required
-                    />
-                </div>
-
-                {/* Phone */}
-                <div>
-                    <label className="block mb-1 font-semibold text-gray-700">Phone Number</label>
-                    <input
-                        type="text"
-                        name="phone"
-                        // value={formData.phone}
-                        className="w-full p-3 rounded border border-yellow-300 focus:outline-yellow-500"
-                        placeholder="Enter your phone number"
-                    />
-                </div>
-
-                {/* Bio */}
-                <div>
-                    <label className="block mb-1 font-semibold text-gray-700">Short Bio</label>
-                    <textarea
-                        name="bio"
-                        // value={formData.bio}
-                        rows={4}
-                        className="w-full p-3 rounded border border-yellow-300 focus:outline-yellow-500"
-                        placeholder="Write something about yourself..."
-                    />
-                </div>
-
-                {/* Submit Button */}
-                <button
-                    type="submit"
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-md font-semibold w-full transition"
-                >
-                    Save Changes
-                </button>
-            </form>
-        </div>
+    const res = await axios.post(
+      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+      formData
     );
+
+    setImageUrl(res.data.secure_url);
+    setImagePreview(res.data.secure_url);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const name = e.target.name.value;
+    const phone = e.target.phone.value;
+    const bio = e.target.bio.value;
+
+    updateProfile(auth.currentUser, {
+      displayName: name,
+      photoURL: imageUrl || user?.photoURL,
+    })
+      .then(() => {
+        const updatedUser = {
+          name,
+          phone,
+          bio,
+          photoURL: imageUrl || user?.photoURL,
+        };
+
+        AxiosSecure.put(
+          `/user_profile_update_to_DB/${user?.email}`,
+          updatedUser
+        ).then((res) => {
+          if (res?.data) {
+            Swal.fire({
+              position: 'top-center',
+              icon: 'success',
+              title: 'Profile updated successfully',
+              showConfirmButton: false,
+              timer: 1500,
+            });
+
+            setLoading(false);
+          }
+        });
+      })
+      .catch(() => setLoading(false));
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-blue-50">
+        <p className="text-blue-600 font-semibold text-lg">
+          Updating Profile...
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-blue-50 flex items-center justify-center px-4">
+      <div className="w-full max-w-3xl bg-white p-8 rounded-2xl shadow-lg border border-blue-100">
+
+        {/* Header */}
+        <h2 className="text-3xl font-bold mb-6 text-blue-700 text-center">
+          👤 Update Profile
+        </h2>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+
+          {/* PROFILE IMAGE */}
+          <div className="flex flex-col items-center">
+            <img
+              src={imagePreview || user?.photoURL}
+              alt="Profile"
+              className="w-32 h-32 rounded-full border-4 border-blue-200 object-cover mb-3"
+            />
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleChange}
+              className="file-input file-input-bordered file-input-primary w-full max-w-xs"
+            />
+          </div>
+
+          {/* NAME */}
+          <div>
+            <label className="block mb-1 font-semibold text-gray-700">
+              Full Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              defaultValue={user?.displayName}
+              className="w-full p-3 rounded-lg border border-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              required
+            />
+          </div>
+
+          {/* PHONE */}
+          <div>
+            <label className="block mb-1 font-semibold text-gray-700">
+              Phone Number
+            </label>
+            <input
+              type="text"
+              name="phone"
+              className="w-full p-3 rounded-lg border border-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              placeholder="Enter phone number"
+            />
+          </div>
+
+          {/* BIO */}
+          <div>
+            <label className="block mb-1 font-semibold text-gray-700">
+              Short Bio
+            </label>
+            <textarea
+              name="bio"
+              rows={4}
+              className="w-full p-3 rounded-lg border border-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              placeholder="Write about yourself..."
+            />
+          </div>
+
+          {/* BUTTON */}
+          <button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition shadow-md"
+          >
+            Save Changes
+          </button>
+
+        </form>
+      </div>
+    </div>
+  );
 };
 
 export default Profile_page;

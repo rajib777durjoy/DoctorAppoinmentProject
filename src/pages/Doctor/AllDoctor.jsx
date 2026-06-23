@@ -1,78 +1,95 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion'; 
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import AxiosPublic from '../../Hook/AxosPublic';
+import { FaUserMd } from "react-icons/fa";
 
 const AllDoctor = () => {
   const axiospublic = AxiosPublic();
-  const [doctors, setdoctor] = useState([]);
+  const [doctors, setDoctors] = useState([]);
 
   useEffect(() => {
-    axiospublic.get('/doctor/alldoctor').then(res => {
-      setdoctor(res?.data);
-    });
+    axiospublic.get('/doctor/alldoctor')
+      .then(res => setDoctors(res.data))
+      .catch(err => console.log(err));
   }, []);
 
   return (
-   <div className="w-full min-h-screen py-16 bg-white">
-      {/* Header Section */}
-      <div className="max-w-5xl mx-auto mb-12 px-4">
-        <h1 className="text-5xl font-extrabold text-yellow-500 text-center">
+    <section className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50 py-20">
+
+      {/* HERO */}
+      <div className="text-center max-w-3xl mx-auto px-4 mb-14">
+
+        <FaUserMd className="text-blue-600 text-4xl mx-auto mb-3" />
+
+        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">
           Our Expert Doctors
         </h1>
-        <p className="text-center text-gray-600 mt-3 max-w-xl mx-auto">
-          Meet our qualified medical professionals dedicated to providing you the best healthcare services.
+
+        <p className="text-gray-500 mt-3">
+          Meet our highly qualified medical professionals dedicated to providing world-class healthcare services.
         </p>
+
       </div>
 
-      {/* Doctor Cards Grid */}
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {doctors?.map((item, index) => (
-            <motion.div
-              key={item._id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-white rounded-2xl shadow-md hover:shadow-xl border border-yellow-300 flex flex-col items-center p-6 transition-transform duration-300 hover:scale-[1.03]"
-            >
-              {/* Profile Image */}
-              <figure className="relative w-32 h-32 mb-4">
-                <img
-                  src={item?.image}
-                  alt={item?.name}
-                  className="rounded-full w-full h-full object-cover border-4 border-yellow-400"
-                />
-                <span className="absolute bottom-0 right-0 bg-green-500 border-white border-2 w-4 h-4 rounded-full"></span>
-              </figure>
+      {/* GRID */}
+      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
 
-              {/* Name */}
-              <h2 className="text-xl font-bold text-gray-800 text-center mb-1">{item?.name}</h2>
+        {doctors?.map((item, index) => (
+          <motion.div
+            key={item._id}
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: index * 0.05 }}
+            className="group bg-white border border-blue-100 rounded-2xl shadow-sm hover:shadow-xl transition overflow-hidden"
+          >
 
-              {/* Specialization or Category */}
+            {/* TOP GRADIENT HEADER */}
+            <div className="h-20 bg-gradient-to-r from-blue-600 to-blue-800"></div>
+
+            {/* PROFILE IMAGE */}
+            <div className="flex justify-center -mt-10">
+              <img
+                src={item?.image}
+                alt={item?.name}
+                className="w-24 h-24 rounded-full border-4 border-white object-cover shadow-md"
+              />
+            </div>
+
+            {/* CONTENT */}
+            <div className="p-5 text-center">
+
+              <h2 className="text-lg font-bold text-gray-800">
+                {item?.name}
+              </h2>
+
+              {/* CATEGORY */}
               {item?.Category && (
-                <p className="text-sm text-yellow-600 font-medium bg-yellow-100 px-3 py-1 rounded-full mb-2">
+                <span className="inline-block mt-2 text-sm font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
                   {item?.Category}
-                </p>
+                </span>
               )}
 
-              {/* Short Description */}
-              <p className="text-gray-600 text-sm text-center mb-4 line-clamp-3 h-[72px]">
+              {/* DESCRIPTION */}
+              <p className="text-sm text-gray-500 mt-3 line-clamp-3">
                 {item?.description?.slice(0, 90)}...
               </p>
 
-              {/* Action Button */}
-              <Link to={`/doctorDetails/${item?._id}`} className="w-full">
-                <button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded-full transition duration-200 shadow-sm hover:shadow-lg">
+              {/* BUTTON */}
+              <Link to={`/doctorDetails/${item?._id}`}>
+                <button className="mt-5 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-full transition shadow-md">
                   View Profile
                 </button>
               </Link>
-            </motion.div>
-          ))}
-        </div>
+
+            </div>
+
+          </motion.div>
+        ))}
+
       </div>
-    </div>
+
+    </section>
   );
 };
 

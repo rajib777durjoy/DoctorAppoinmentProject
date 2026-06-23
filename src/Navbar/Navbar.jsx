@@ -1,251 +1,267 @@
-import React, { useEffect, useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import logo from '../assets/doctor_2785482.png';
-import useAuth from '../Hook/useAuth';
-import axiosSecure from '../Hook/axiosSecure';
-
-
+import React, { useEffect, useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Menu, X } from "lucide-react";
+import logo from "../assets/doctor_2785482.png";
+import useAuth from "../Hook/useAuth";
+import axiosSecure from "../Hook/axiosSecure";
 
 const Navbar = () => {
-  const { signout, user, loading } = useAuth();
+  const { user, signout, loading } = useAuth();
   const navigate = useNavigate();
   const AxiosSecure = axiosSecure();
-  const [role,setRole] = useState([])
+  const [role, setRole] = useState(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    if (!user?.email) {
-      return;
-    }
-    AxiosSecure.get(`/verify_user/${user?.email}`)
-      .then(res => {
-        setRole(res?.data?.role)
-      })
-      
-  },[user,loading])
-  const admin = role == 'admin';
-  const doctor = role == 'doctor';
-  const member = role == 'member';
-  console.log('role:', role)
-  const links = (
-    <>
-      <NavLink
-        to="/"
-        className={({ isActive }) =>
-          `mx-3 px-3 py-2 rounded-lg text-lg font-semibold transition-colors ${isActive
-            ? 'text-amber-900 bg-amber-200 shadow-lg'
-            : 'text-gray-800 hover:text-amber-700 hover:bg-amber-100'
-          }`
-        }
-      >
-        Home
-      </NavLink>
-      <NavLink
-        to="/alldoctor"
-        className={({ isActive }) =>
-          `mx-3 px-3 py-2 rounded-lg text-lg font-semibold transition-colors ${isActive
-            ? 'text-amber-900 bg-amber-200 shadow-lg'
-            : 'text-gray-800 hover:text-amber-700 hover:bg-amber-100'
-          }`
-        }
-      >
-        Our Doctors
-      </NavLink>
-      <NavLink
-        to="/service"
-        className={({ isActive }) =>
-          `mx-3 px-3 py-2 rounded-lg text-lg font-semibold transition-colors ${isActive
-            ? 'text-amber-900 bg-amber-200 shadow-lg'
-            : 'text-gray-800 hover:text-amber-700 hover:bg-amber-100'
-          }`
-        }
-      >
-        Our Service
-      </NavLink>
-      <NavLink
-        to="/profile_page"
-        className={({ isActive }) =>
-          `mx-3 px-3 py-2 rounded-lg text-lg font-semibold transition-colors ${isActive
-            ? 'text-amber-900 bg-amber-200 shadow-lg'
-            : 'text-gray-800 hover:text-amber-700 hover:bg-amber-100'
-          }`
-        }
-      >
-       Profile
-      </NavLink>
-      <div className='flex items-center'>
-        {admin && (
-          <NavLink
-            to="/dashboard/adminHome"
-             className={({ isActive }) =>
-          `mx-3 px-3 py-2 rounded-lg text-lg font-semibold transition-colors ${isActive
-            ? 'text-amber-900 bg-amber-200 shadow-lg'
-            : 'text-gray-800 hover:text-amber-700 hover:bg-amber-100'
-          }`
-        }
-          >
-            Dashboard
-          </NavLink>
-        )}
+    if (!user?.email) return;
+    AxiosSecure.get(`/verify_user/${user.email}`).then((res) => {
+      if (res?.data?.role) {
+        setRole(res?.data?.role);
+        console.log(res?.data?.role)
+      }
+    });
+  }, [user, loading]);
 
-        {doctor && (
-          <NavLink
-            to="/dashboard/doctorHome"
-            className={({ isActive }) =>
-          `mx-3 px-3 py-2 rounded-lg text-lg font-semibold transition-colors ${isActive
-            ? 'text-amber-900 bg-amber-200 shadow-lg'
-            : 'text-gray-800 hover:text-amber-700 hover:bg-amber-100'
-          }`
-        }
-          >
-            Dashboard
-          </NavLink>
-        )}
+  const handleLogout = async () => {
+    await signout();
+    setRole(null)
+    navigate("/login");
+  };
 
-        {member && (
-          <NavLink
-            to="/dashboard/memberHome"
-            className={({ isActive }) =>
-          `mx-3 px-3 py-2 rounded-lg text-lg font-semibold transition-colors ${isActive
-            ? 'text-amber-900 bg-amber-200 shadow-lg'
-            : 'text-gray-800 hover:text-amber-700 hover:bg-amber-100'
-          }`
-        }
+  const navClass = ({ isActive }) =>
+    `px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 ${isActive
+      ? "bg-blue-100 text-blue-600"
+      : "text-gray-700 hover:text-blue-600 hover:bg-gray-100"
+    }`;
+  //  console.log('role',role,loading)
+  return (
+    <header className="sticky top-0 z-50 backdrop-blur-lg bg-white/80 border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 lg:px-8">
+        <div className="h-20 flex items-center justify-between">
+
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-3">
+            <div className="bg-blue-600 p-2 rounded-2xl shadow-lg">
+              <img
+                src={logo}
+                alt="logo"
+                className="w-8 h-8 object-cover"
+              />
+            </div>
+
+            <div>
+              <h1 className="font-bold text-2xl text-gray-900">
+                Dr<span className="text-blue-600">Meet</span>
+              </h1>
+              <p className="text-xs text-gray-500">
+                Healthcare Platform
+              </p>
+            </div>
+          </Link>
+
+          {/* Desktop Menu */}
+          <div className="hidden lg:flex items-center gap-2">
+
+            <NavLink to="/" className={navClass}>
+              Home
+            </NavLink>
+
+            <NavLink to="/alldoctor" className={navClass}>
+              Doctors
+            </NavLink>
+
+            <NavLink to="/service" className={navClass}>
+              Services
+            </NavLink>
+
+            <NavLink to="/profile_page" className={navClass}>
+              Profile
+            </NavLink>
+
+            {(user && role === "admin") && (
+              <NavLink
+                to="/dashboard/adminHome"
+                className="ml-2 px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-md"
+              >
+                Dashboard
+              </NavLink>
+            )}
+
+            {(user && role === "doctor") && (
+              <NavLink
+                to="/dashboard/doctorHome"
+                className="ml-2 px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-md"
+              >
+                Dashboard
+              </NavLink>
+            )}
+
+            {(user && role === "member") && (
+              <NavLink
+                to="/dashboard/memberHome"
+                className="ml-2 px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-md"
+              >
+                Dashboard
+              </NavLink>
+            )}
+          </div>
+
+          {/* Right Side */}
+          <div className="hidden lg:flex items-center gap-4">
+            {user ? (
+              <>
+                <div className="dropdown dropdown-end">
+                  <label tabIndex={0}>
+                    <img
+                      src={user?.photoURL}
+                      alt=""
+                      className="w-11 h-11 rounded-full border-2 border-blue-500 cursor-pointer"
+                    />
+                  </label>
+
+                  <ul
+                    tabIndex={0}
+                    className="dropdown-content z-50 menu p-3 shadow-xl bg-white rounded-2xl w-72 mt-3"
+                  >
+                    <div className="flex items-center gap-3 p-2">
+                      <img
+                        src={user?.photoURL}
+                        alt=""
+                        className="w-12 h-12 rounded-full"
+                      />
+
+                      <div>
+                        <h3 className="font-semibold">
+                          {user?.displayName}
+                        </h3>
+
+                        <p className="text-xs text-gray-500">
+                          {user?.email}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="divider my-1"></div>
+
+                    <li>
+                      <Link to="/profile_page">
+                        My Profile
+                      </Link>
+                    </li>
+
+                    <li>
+                      <button onClick={handleLogout}>
+                        Logout
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </>
+            ) : (
+              <div className="flex gap-3">
+                <Link
+                  to="/login"
+                  className="px-5 py-2 border border-blue-600 text-blue-600 rounded-xl hover:bg-blue-50"
+                >
+                  Login
+                </Link>
+
+                <Link
+                  to="/register"
+                  className="px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-md"
+                >
+                  Get Started
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Button */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="lg:hidden"
           >
-            Dashboard
-          </NavLink>
-        )}
+            {mobileOpen ? <X /> : <Menu />}
+          </button>
+        </div>
       </div>
 
+      {/* Mobile Drawer */}
+      {mobileOpen && (
+        <div className="lg:hidden bg-white border-t shadow-lg">
+          <div className="flex flex-col p-5 gap-3">
 
-    </>
-  );
-//  console.log('loading:',loading,'user_navber:::',user)
-  return (
-    <header className="bg-amber-400 sticky top-0  z-50 shadow-xl w-[100%]">
-      <nav className="w-[100%] xl:w-[90%] mx-auto sm:px-8 md:px-2 lg:px-4  flex items-center justify-between h-16">
-        {/* Logo and Title */}
-        <Link
-          to="/"
-          className="flex items-center  gap-3 font-extrabold text-white text-3xl select-none drop-shadow-lg"
-          aria-label="Dr Meet Home"
-        >
-          <img src={logo} alt="Logo" className="w-12 h-12" />
-          <span>
-            Dr<span className="text-gray-900 text-2xl font-semibold">.Meet</span>
-          </span>
-        </Link>
+            <NavLink to="/" className={navClass}>
+              Home
+            </NavLink>
 
-        {/* Desktop Links */}
-        <div className="hidden lg:flex space-x-6">{links}</div>
+            <NavLink to="/alldoctor" className={navClass}>
+              Doctors
+            </NavLink>
 
-        {/* User Section */}
-        <div className="flex items-center gap-6">
-          {user ? (
-            <>
-              {/* Profile Dropdown */}
-              <div className="relative group">
-                <button
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                  aria-label="User menu"
-                  className="flex items-center focus:outline-none ring-2  rounded-full"
-                >
-                  <img
-                    src={user.photoURL}
-                    alt="User Avatar"
-                    className="w-12 h-12 rounded-full border-4 border-white shadow-md"
-                  />
-                </button>
+            <NavLink to="/service" className={navClass}>
+              Services
+            </NavLink>
 
-              </div>
+            <NavLink to="/profile_page" className={navClass}>
+              Profile
+            </NavLink>
 
-              {/* Logout Button */}
+            <hr />
+            {(user && role === "admin") && (
+              <NavLink
+                to="/dashboard/adminHome"
+                className="ml-2 px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-md"
+              >
+                Dashboard
+              </NavLink>
+            )}
+
+            {(user && role === "doctor") && (
+              <NavLink
+                to="/dashboard/doctorHome"
+                className="ml-2 px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-md"
+              >
+                Dashboard
+              </NavLink>
+            )}
+
+            {(user && role === "member") && (
+              <NavLink
+                to="/dashboard/memberHome"
+                className="ml-2 px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-md"
+              >
+                Dashboard
+              </NavLink>
+            )}
+
+            {user ? (
               <button
-                onClick={() => {
-                  signout().then(() => navigate('/login'));
-                }}
-                className="px-5 py-2 hidden lg:block bg-white hover:bg-yellow-400 text-black hover:text-white rounded-lg shadow-lg font-semibold transition"
+                onClick={handleLogout}
+                className="bg-red-500 text-white py-2 rounded-xl"
               >
                 Logout
               </button>
-            </>
-          ) : (
-            <div className='hidden lg:flex space-x-6 '>
-              <Link
-                to="/login"
-                className="px-5 py-2 bg-white text-amber-700 font-semibold rounded-lg shadow-lg hover:bg-amber-50 transition"
-              >
-                Login
-              </Link>
-              <Link
-                to="/register"
-                className="px-5 py-2 bg-amber-800 text-white font-semibold rounded-lg shadow-lg hover:bg-amber-900 transition"
-              >
-                Register
-              </Link>
-            </div>
-          )}
-        </div>
-
-        {/* Mobile Hamburger Menu */}
-        <div className="lg:hidden relative w-[50px]">
-          <input type="checkbox" id="menu-toggle" className="hidden peer" />
-          <label
-            htmlFor="menu-toggle"
-            className="cursor-pointer flex items-center px-2 py-3 border rounded-md text-white border-white peer-checked:bg-amber-500 transition"
-            aria-label="Toggle menu"
-          >
-            <svg
-              className="fill-current h-7 w-7"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M4 6h16M4 12h8m-8 6h16"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </label>
-
-          <div
-            className="absolute top-full -right-5 w-[250px] bg-amber-400 shadow-lg rounded-b-lg py-3 opacity-0 pointer-events-none transition-opacity duration-300 peer-checked:opacity-100 peer-checked:pointer-events-auto"
-            id="menu"
-          >
-            <div className="flex flex-col items-center space-y-2">
-              {links}
-
-              {user ? (
-                <button
-                  onClick={() => {
-                    signout().then(() => navigate('/login'));
-                  }}
-                  className="mt-3 px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-lg w-11/12 font-semibold"
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="border text-center py-2 rounded-xl"
                 >
-                  Logout
-                </button>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    className="mt-3 px-6 py-2 bg-white text-amber-700 font-semibold rounded-lg shadow-lg w-11/12 text-center"
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    to="/register"
-                    className="mt-3 px-6 py-2 bg-amber-800 text-white font-semibold rounded-lg shadow-lg w-11/12 text-center"
-                  >
-                    Register
-                  </Link>
-                </>
-              )}
-            </div>
+                  Login
+                </Link>
+
+                <Link
+                  to="/register"
+                  className="bg-blue-600 text-center text-white py-2 rounded-xl"
+                >
+                  Register
+                </Link>
+              </>
+            )}
           </div>
         </div>
-      </nav>
+      )}
     </header>
   );
 };

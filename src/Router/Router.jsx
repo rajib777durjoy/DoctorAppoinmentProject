@@ -29,9 +29,10 @@ import Profile_page from '../ProfileManagement/Profile_page';
 import Categorys from '../pages/Categorys/Categorys';
 import Service from '../pages/component/service/Service';
 import Myappoinment from '../pages/Doctor/Component/Myappoinment';
-import AI_powered_Checkup from '../pages/Mamber/Component/AI_powered_Checkup';
-import Report from '../pages/Mamber/Component/Report';
-import ReportDetails from '../pages/Mamber/Component/ReportDetails';
+import SocketProvider from '../SocketContext/SocketProvider';
+import Chat_Static from '../pages/Mamber/Component/Chat_Static';
+import UserChat from '../pages/Mamber/Component/UserChat';
+
 
 
 
@@ -86,12 +87,12 @@ const Router = createBrowserRouter([
                 path:'/profile_page',
                 element:<Profile_page></Profile_page>
             }
-
+            
         ]
     },
     {
         path:'/dashboard',
-        element:<Protect><Dashboard></Dashboard></Protect>,
+        element:<Protect><SocketProvider><Dashboard></Dashboard></SocketProvider></Protect>,
         children:[
             {
                 path:'adminHome',
@@ -105,18 +106,7 @@ const Router = createBrowserRouter([
                 path:'memberHome',
                 element:<MemberHome></MemberHome>
             },
-            {
-              path:'AI_Powered_Health',
-              element:<AI_powered_Checkup></AI_powered_Checkup>
-            },
-            {
-                path:'view_report',
-                element:<Report></Report>
-            },
-            {
-                path:'reportDetails/:id',
-                element:<ReportDetails></ReportDetails>
-            },
+        
             {
                 path:'addcategory',
                 element:<AddCategory></AddCategory>
@@ -159,7 +149,17 @@ const Router = createBrowserRouter([
             },
             {
                 path:'Chat',
-                element:<Chat></Chat>
+                element:<Chat></Chat>,
+                children:[
+                    {
+                        index:true,
+                        element:<Chat_Static></Chat_Static>
+                    },
+                    {
+                        path:'/dashboard/Chat/user/:id',
+                        element:<UserChat></UserChat>
+                    }
+                ]
             },
             {
                 path:'appoinmentlist',

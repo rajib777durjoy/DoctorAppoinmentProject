@@ -5,73 +5,109 @@ import {
   FaStethoscope,
   FaEnvelope,
   FaRegCalendarAlt,
-  FaMoneyCheckAlt,
-  FaClipboardList,
+  FaMoneyBillWave,
+  FaIdCard
 } from 'react-icons/fa';
-
 
 const AppointmentList = () => {
   const AxiosSecure = axiosSecure();
-  const [appoinmentData, setAppoinmentData] = useState([]);
   const { user } = useAuth();
+  const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
     if (user?.email) {
       AxiosSecure.get(`/appointmentlist/${user.email}`).then((res) => {
-        setAppoinmentData(res.data);
+        setAppointments(res.data);
       });
     }
   }, [user?.email]);
-  console.log('appoinmentData',appoinmentData)
-  return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4">
-      <h1 className="text-3xl font-bold text-center text-amber-600 mb-8">
-        🗓️ My Appointments
-      </h1>
 
-      {appoinmentData.length === 0 ? (
-        <div className="text-center text-gray-500 text-lg">No appointments found.</div>
+  return (
+    <section className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-4">
+
+      {/* HEADER */}
+      <div className="text-center mb-10">
+        <h1 className="text-4xl font-extrabold text-gray-800">
+          My Appointments
+        </h1>
+        <p className="text-gray-500 mt-2">
+          Manage your booked consultations easily
+        </p>
+      </div>
+
+      {/* EMPTY STATE */}
+      {appointments.length === 0 ? (
+        <div className="text-center text-gray-500 text-lg">
+          No appointments found
+        </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-          {appoinmentData.map((item, index) => (
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+          {appointments.map((item, index) => (
             <div
               key={index}
-              className="bg-white rounded-lg shadow-md border border-yellow-300 hover:shadow-xl p-6 flex flex-col justify-between transition-transform hover:scale-[1.02]"
+              className="bg-white border border-blue-100 rounded-2xl shadow-sm hover:shadow-xl transition duration-300 hover:-translate-y-1 p-6 flex flex-col justify-between"
             >
+
+              {/* TOP SECTION */}
               <div>
-                <h2 className="text-xl font-semibold capitalize text-yellow-600 mb-1 flex items-center gap-2">
-                  <FaStethoscope className="text-yellow-500 " /> {item?.Doctor_info?.name}
-                </h2>
-                <p className="text-sm text-gray-600 mb-2 flex items-center gap-2">
-                  <FaEnvelope className="text-yellow-500" /> {item?.Doctor_info?.email}
+
+                <div className="flex items-center justify-between mb-3">
+
+                  <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                    <FaStethoscope className="text-blue-600" />
+                    Dr. {item?.Doctor_info?.name}
+                  </h2>
+
+                  <span className="text-xs bg-blue-100 text-blue-600 px-3 py-1 rounded-full">
+                    Confirmed
+                  </span>
+
+                </div>
+
+                <p className="text-sm text-gray-500 flex items-center gap-2 mb-4">
+                  <FaEnvelope className="text-blue-500" />
+                  {item?.Doctor_info?.email}
                 </p>
 
-                <div className="space-y-2 text-sm text-gray-700 mt-4">
+                <div className="space-y-2 text-sm text-gray-600">
+
                   <div className="flex items-center gap-2">
-                    <FaMoneyCheckAlt className="text-yellow-600" />
-                    <span><strong>Doctor Fee:</strong> ${item?.amount}</span>
+                    <FaMoneyBillWave className="text-blue-500" />
+                    <span>
+                      <strong>Fee:</strong> ৳{item?.amount}
+                    </span>
                   </div>
+
                   <div className="flex items-center gap-2">
-                    <FaRegCalendarAlt className="text-yellow-600" />
-                    <span><strong>Date:</strong> {item?.appointmentDay}</span>
+                    <FaRegCalendarAlt className="text-blue-500" />
+                    <span>
+                      <strong>Date:</strong> {item?.appointmentDay}
+                    </span>
                   </div>
+
                   <div className="flex items-center gap-2">
-                    <FaClipboardList className="text-yellow-600" />
-                    <span><strong>Register No:</strong> {item?.Doctor_info?.Register}</span>
+                    <FaIdCard className="text-blue-500" />
+                    <span>
+                      <strong>Reg No:</strong> {item?.Doctor_info?.Register}
+                    </span>
                   </div>
+
                 </div>
               </div>
 
-              <div className="mt-6 text-center">
-                <button className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold px-6 py-2 rounded-full shadow-md transition">
-                  👨‍⚕️ Meet Now
-                </button>
-              </div>
+              {/* ACTION */}
+              <button className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition">
+                👨‍⚕️ Join Consultation
+              </button>
+
             </div>
           ))}
+
         </div>
       )}
-    </div>
+
+    </section>
   );
 };
 

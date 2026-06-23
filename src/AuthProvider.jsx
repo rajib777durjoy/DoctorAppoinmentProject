@@ -7,7 +7,6 @@ import AxiosPublic from './Hook/AxosPublic';
 export const Auth = createContext();
 
 const AuthProvider = ({ children }) => {
-
     const provider = new GoogleAuthProvider();
     const [user, setuser] = useState(null)
     const [loading, setloading] = useState(true)
@@ -18,11 +17,12 @@ const AuthProvider = ({ children }) => {
         return signInWithPopup(auth, provider)
     }
     const userSignUp = (email, password) => {
+        
         setloading(true)
         return createUserWithEmailAndPassword(auth, email, password)
     }
     const userSignIn = (email, password) => {
-        console.log('email and password',email,password)
+        console.log('email and password', email, password)
         setloading(true)
         return signInWithEmailAndPassword(auth, email, password)
     }
@@ -34,14 +34,14 @@ const AuthProvider = ({ children }) => {
         })
     }
     const signout = () => {
+        setloading(true)
         return signOut(auth)
     }
     useEffect(() => {
         const Unsubcribe = onAuthStateChanged(auth, (currentuser) => {
             console.log('currentuser:', currentuser)
+            setuser(currentuser)
             if (currentuser?.email) {
-                console.log('currentuser done:', currentuser)
-                setuser(currentuser)
                 axiospublic.get(`/jwt/${currentuser?.email}`)
                     .then(res => {
                         console.log('token', res.data?.token)

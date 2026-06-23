@@ -7,230 +7,206 @@ import useAuth from '../../Hook/useAuth';
 import AxiosPublic from '../../Hook/AxosPublic';
 
 const AddDoctor = () => {
-    const [selectedOptions, setSelectedOptions] = useState([]);
-    const [selectedSkills, setSelectedSkills] = useState([]);
-    const weeken = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const [Degree, setDegree] = useState([]);
-    const [category, setCategory] = useState([]);
-    const [values, setValues] = useState('');
-    const options = weeken.map(day => ({ value: day, label: day }));
-    const Skills = Degree.map(skill => ({ value: skill.degree, label: skill.degree }));
+  const [selectedDays, setSelectedDays] = useState([]);
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [category, setCategory] = useState([]);
+  const [degreeList, setDegreeList] = useState([]);
+  const [categoryValue, setCategoryValue] = useState('');
 
-    const day = selectedOptions.map(i => i.value);
-    const skill = selectedSkills.map(i => i.value);
+  const axiospublic = AxiosPublic();
+  const AxiosSecure = axiosSecure();
+  const { user } = useAuth();
 
-    const axiospublic = AxiosPublic();
-    const { register, handleSubmit, formState: { errors } } = useForm();
-    const AxiosSecure = axiosSecure();
-    const { user } = useAuth();
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
-    useEffect(() => {
-        axiospublic.get('/category').then(res => setCategory(res.data));
-        axiospublic.get('/degreelist').then(res => setDegree(res.data));
-    }, []);
+  const daysOptions = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+    .map(day => ({ value: day, label: day }));
 
-    const onSubmit = (data) => {
-        const obj = {
-            name: user?.displayName,
-            email: user?.email,
-            image: user?.photoURL,
-            fee: data.fee,
-            Register: data.registerNo,
-            StartTime: data.startTime,
-            endTime: data.endTime,
-            Category: values,
-            description: data.description,
-            PatientLimit: parseInt(data.limit),
-            status: "pending",
-            day,
-            skill
-        };
+  const skillsOptions = degreeList.map(d => ({
+    value: d.degree,
+    label: d.degree
+  }));
 
-        AxiosSecure.post('/doctor/addDoctor', obj).then(res => {
-            if (res.data.insertedId) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Request Posted Successfully',
-                    timer: 1500,
-                    showConfirmButton: false,
-                    position: 'top-center',
-                });
-            }
-        });
+  const days = selectedDays.map(d => d.value);
+  const skills = selectedSkills.map(s => s.value);
+
+  useEffect(() => {
+    axiospublic.get('/category').then(res => setCategory(res.data));
+    axiospublic.get('/degreelist').then(res => setDegreeList(res.data));
+  }, []);
+
+  const onSubmit = async (data) => {
+    const payload = {
+      name: user?.displayName,
+      email: user?.email,
+      image: user?.photoURL,
+      fee: data.fee,
+      Register: data.registerNo,
+      StartTime: data.startTime,
+      endTime: data.endTime,
+      Category: categoryValue,
+      description: data.description,
+      PatientLimit: parseInt(data.limit),
+      status: "pending",
+      day: days,
+      skill: skills
     };
 
-    return (
-        <div className="max-w-7xl mx-auto my-16 px-6 bg-white rounded-lg shadow-lg">
-            <h1 className="text-4xl font-extrabold text-yellow-600 text-center mb-10">Join Our Team</h1>
-            <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Left Side */}
-                <div className="space-y-6">
-                    {/* Name and Image */}
-                    <div className="flex gap-4">
-                        <div className="flex-1">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                            <input
-                                type="text"
-                                {...register("name")}
-                                defaultValue={user?.displayName}
-                                readOnly
-                                className="input input-bordered w-full bg-gray-100 cursor-not-allowed"
-                            />
-                        </div>
-                        <div className="flex-1">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
-                            <input
-                                type="text"
-                                {...register("image")}
-                                defaultValue={user?.photoURL}
-                                readOnly
-                                className="input input-bordered w-full bg-gray-100 cursor-not-allowed"
-                            />
-                        </div>
-                    </div>
+    const res = await AxiosSecure.post('/doctor/addDoctor', payload);
 
-                    {/* Email */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                        <input
-                            type="email"
-                            {...register("email")}
-                            defaultValue={user?.email}
-                            readOnly
-                            className="input input-bordered w-full bg-gray-100 cursor-not-allowed"
-                        />
-                    </div>
+    if (res.data.insertedId) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Application Submitted',
+        text: 'Your request is under review',
+        timer: 1500,
+        showConfirmButton: false
+      });
+    }
+  };
 
-                    {/* Fee and Register No */}
-                    <div className="flex gap-4">
-                        <div className="flex-1">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Fee</label>
-                            <input
-                                type="number"
-                                {...register("fee", { required: true })}
-                                placeholder="Fee"
-                                className="input input-bordered w-full"
-                            />
-                            {errors.fee && <p className="text-sm text-red-500 mt-1">Fee is required</p>}
-                        </div>
-                        <div className="flex-1">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Register No</label>
-                            <input
-                                type="text"
-                                {...register("registerNo", { required: true })}
-                                placeholder="Registration code"
-                                className="input input-bordered w-full"
-                            />
-                            {errors.registerNo && <p className="text-sm text-red-500 mt-1">Register No is required</p>}
-                        </div>
-                    </div>
+  return (
+    <section className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50 py-16">
 
-                    {/* Degree Multi-select */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Degree</label>
-                        <Select
-                            isMulti
-                            options={Skills}
-                            value={selectedSkills}
-                            onChange={setSelectedSkills}
-                            className="w-full"
-                            placeholder="Select degrees"
-                        />
-                    </div>
+      <div className="max-w-5xl mx-auto px-4">
 
-                    {/* Category Dropdown */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                        <select
-                            value={values}
-                            onChange={(e) => setValues(e.target.value)}
-                            className="select select-bordered w-full"
-                            required
-                        >
-                            <option value="" disabled>Select a category</option>
-                            {category.map((item, idx) => (
-                                <option key={idx} value={item?.category}>
-                                    {item?.category}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
-
-                {/* Right Side */}
-                <div className="space-y-6">
-                    {/* Start and End Time */}
-                    <div className="flex gap-4">
-                        <div className="flex-1">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Start Duty Time</label>
-                            <input
-                                type="time"
-                                {...register("startTime", { required: true })}
-                                className="input input-bordered w-full"
-                            />
-                            {errors.startTime && <p className="text-sm text-red-500 mt-1">Start time is required</p>}
-                        </div>
-                        <div className="flex-1">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">End Duty Time</label>
-                            <input
-                                type="time"
-                                {...register("endTime", { required: true })}
-                                className="input input-bordered w-full"
-                            />
-                            {errors.endTime && <p className="text-sm text-red-500 mt-1">End time is required</p>}
-                        </div>
-                    </div>
-
-                    {/* Select Days */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Select Days</label>
-                        <Select
-                            isMulti
-                            options={options}
-                            value={selectedOptions}
-                            onChange={setSelectedOptions}
-                            className="w-full"
-                            placeholder="Select available days"
-                        />
-                    </div>
-
-                    {/* Patient Limit */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Patient Limit</label>
-                        <input
-                            type="number"
-                            {...register("limit", { required: true })}
-                            placeholder="Number of patients per day"
-                            className="input input-bordered w-full"
-                        />
-                        {errors.limit && <p className="text-sm text-red-500 mt-1">Patient limit is required</p>}
-                    </div>
-
-                    {/* Description */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                        <textarea
-                            rows={6}
-                            {...register("description", { required: true })}
-                            placeholder="Bio"
-                            className="textarea textarea-bordered w-full resize-none"
-                        />
-                        {errors.description && <p className="text-sm text-red-500 mt-1">Description is required</p>}
-                    </div>
-
-                    {/* Submit Button */}
-                    <div className="pt-4">
-                        <button
-                            type="submit"
-                            className="btn bg-yellow-400 hover:bg-yellow-500 w-full text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition"
-                        >
-                            Apply
-                        </button>
-                    </div>
-                </div>
-            </form>
+        {/* HEADER */}
+        <div className="text-center mb-10">
+          <h1 className="text-4xl font-extrabold text-gray-800">
+            Join as a Doctor
+          </h1>
+          <p className="text-gray-500 mt-2">
+            Fill out your professional details to start practicing with us
+          </p>
         </div>
-    );
+
+        {/* FORM CARD */}
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="bg-white border border-blue-100 shadow-lg rounded-3xl p-8 grid grid-cols-1 md:grid-cols-2 gap-8"
+        >
+
+          {/* LEFT */}
+          <div className="space-y-5">
+
+            <div className="p-4 bg-blue-50 rounded-xl">
+              <label className="text-sm text-gray-600">Name</label>
+              <input
+                readOnly
+                defaultValue={user?.displayName}
+                className="w-full bg-transparent font-semibold text-gray-800 outline-none"
+              />
+            </div>
+
+            <div className="p-4 bg-blue-50 rounded-xl">
+              <label className="text-sm text-gray-600">Email</label>
+              <input
+                readOnly
+                defaultValue={user?.email}
+                className="w-full bg-transparent font-semibold text-gray-800 outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-gray-700">Fee</label>
+              <input
+                {...register("fee", { required: true })}
+                className="input input-bordered w-full mt-1"
+              />
+              {errors.fee && <p className="text-red-500 text-sm">Required</p>}
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-gray-700">Register No</label>
+              <input
+                {...register("registerNo", { required: true })}
+                className="input input-bordered w-full mt-1"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-gray-700">Category</label>
+              <select
+                value={categoryValue}
+                onChange={(e) => setCategoryValue(e.target.value)}
+                className="select select-bordered w-full mt-1"
+              >
+                <option value="">Select Category</option>
+                {category.map((c, i) => (
+                  <option key={i} value={c.category}>
+                    {c.category}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+          </div>
+
+          {/* RIGHT */}
+          <div className="space-y-5">
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-sm">Start Time</label>
+                <input type="time" {...register("startTime", { required: true })}
+                  className="input input-bordered w-full mt-1" />
+              </div>
+
+              <div>
+                <label className="text-sm">End Time</label>
+                <input type="time" {...register("endTime", { required: true })}
+                  className="input input-bordered w-full mt-1" />
+              </div>
+            </div>
+
+            <div>
+              <label className="text-sm font-medium">Available Days</label>
+              <Select
+                isMulti
+                options={daysOptions}
+                value={selectedDays}
+                onChange={setSelectedDays}
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium">Degrees</label>
+              <Select
+                isMulti
+                options={skillsOptions}
+                value={selectedSkills}
+                onChange={setSelectedSkills}
+              />
+            </div>
+
+            <div>
+              <label className="text-sm">Patient Limit</label>
+              <input
+                type="number"
+                {...register("limit", { required: true })}
+                className="input input-bordered w-full mt-1"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm">Description</label>
+              <textarea
+                rows={4}
+                {...register("description", { required: true })}
+                className="textarea textarea-bordered w-full mt-1"
+              />
+            </div>
+
+            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition">
+              Submit Application
+            </button>
+
+          </div>
+
+        </form>
+      </div>
+    </section>
+  );
 };
 
 export default AddDoctor;

@@ -2,73 +2,119 @@ import React, { useEffect, useState } from 'react';
 import axiosSecure from '../../../Hook/axiosSecure';
 import useAuth from '../../../Hook/useAuth';
 import {
-    FaStethoscope,
-    FaEnvelope,
-    FaRegCalendarAlt,
-    FaMoneyCheckAlt,
-    FaClipboardList,
+  FaStethoscope,
+  FaEnvelope,
+  FaRegCalendarAlt,
+  FaMoneyCheckAlt,
 } from 'react-icons/fa';
+
 const Myappoinment = () => {
-    const AxiosSecure = axiosSecure();
-    const [appoinmentData, setAppoinmentData] = useState([]);
-    const { user } = useAuth();
-    useEffect(()=>{
-        AxiosSecure(`/doctor/appointment_List/${user?.email}`)
-        .then(res=>{
-            console.log('response:::',res.data)
-            setAppoinmentData(res.data);
-        })
-    },[])
-    return (
-        <div className="min-h-screen bg-gray-50 py-10 px-4">
-            <h1 className="text-3xl font-bold text-center text-amber-600 mb-8">
-                🗓️ My Appointments
-            </h1>
+  const AxiosSecure = axiosSecure();
+  const { user } = useAuth();
+  const [appoinmentData, setAppoinmentData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-            {appoinmentData.length === 0 ? (
-                <div className="text-center text-gray-500 text-lg">No appointments found.</div>
-            ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-                    {appoinmentData.map((item, index) => (
-                        <div
-                            key={index}
-                            className="bg-white rounded-lg shadow-md border border-yellow-300 hover:shadow-xl p-6 flex flex-col justify-between transition-transform hover:scale-[1.02]"
-                        >
-                            <div>
-                                <h2 className="text-xl font-semibold capitalize text-yellow-600 mb-1 flex items-center gap-2">
-                                    <FaStethoscope className="text-yellow-500 " /> {item?.Doctor_info?.name}
-                                </h2>
-                                <p className="text-sm text-gray-600 mb-2 flex items-center gap-2">
-                                    <FaEnvelope className="text-yellow-500" /> {item?.Doctor_info?.email}
-                                </p>
+  useEffect(() => {
+    if (!user?.email) return;
 
-                                <div className="space-y-2 text-sm text-gray-700 mt-4">
-                                    <div className="flex items-center gap-2">
-                                        <FaMoneyCheckAlt className="text-yellow-600" />
-                                        <span><strong>Doctor Fee:</strong> ${item?.amount}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <FaRegCalendarAlt className="text-yellow-600" />
-                                        <span><strong>Date:</strong> {item?.appointmentDay}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <FaClipboardList className="text-yellow-600" />
-                                        <span><strong>Register No:</strong> {item?.Doctor_info?.Register}</span>
-                                    </div>
-                                </div>
-                            </div>
+    AxiosSecure(`/doctor/appointment_List/${user?.email}`)
+      .then(res => setAppoinmentData(res.data))
+      .finally(() => setLoading(false));
+  }, [user?.email]);
 
-                            <div className="mt-6 text-center">
-                                <button className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold px-6 py-2 rounded-full shadow-md transition">
-                                    👨‍⚕️ Meet Now
-                                </button>
-                            </div>
-                        </div>
-                    ))}
+  return (
+    <section className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50 py-12 px-4">
+
+      {/* HEADER */}
+      <div className="max-w-6xl mx-auto text-center mb-10">
+
+        <h1 className="text-4xl font-extrabold text-gray-800">
+          My Appointments
+        </h1>
+
+        <p className="text-gray-500 mt-2">
+          Manage all your patient consultations in one place
+        </p>
+
+      </div>
+
+      {/* EMPTY / LOADING */}
+      {loading ? (
+        <p className="text-center text-gray-500">Loading appointments...</p>
+      ) : appoinmentData.length === 0 ? (
+        <p className="text-center text-gray-500">
+          No appointments found
+        </p>
+      ) : (
+
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          {appoinmentData.map((item, index) => (
+            <div
+              key={index}
+              className="bg-white border border-blue-100 rounded-2xl shadow-sm hover:shadow-lg transition overflow-hidden"
+            >
+
+              {/* TOP HEADER BAR */}
+              <div className="h-2 bg-gradient-to-r from-blue-600 to-blue-400"></div>
+
+              <div className="p-6">
+
+                {/* DOCTOR NAME */}
+                <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                  <FaStethoscope className="text-blue-600" />
+                  {item?.Doctor_info?.name}
+                </h2>
+
+                <p className="text-sm text-gray-500 flex items-center gap-2 mt-1">
+                  <FaEnvelope className="text-blue-500" />
+                  {item?.Doctor_info?.email}
+                </p>
+
+                {/* INFO GRID */}
+                <div className="mt-5 space-y-3 text-sm">
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-500">Fee</span>
+                    <span className="font-semibold text-blue-600 flex items-center gap-1">
+                      <FaMoneyCheckAlt />
+                      ${item?.amount}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-500">Date</span>
+                    <span className="font-medium flex items-center gap-1">
+                      <FaRegCalendarAlt />
+                      {item?.appointmentDay}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-500">Register No</span>
+                    <span className="font-medium">
+                      {item?.Doctor_info?.Register}
+                    </span>
+                  </div>
+
                 </div>
-            )}
+
+                {/* ACTION */}
+                <button className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-xl transition">
+                  👨‍⚕️ Join Consultation
+                </button>
+
+              </div>
+
+            </div>
+          ))}
+
         </div>
-    );
+
+      )}
+
+    </section>
+  );
 };
 
 export default Myappoinment;
