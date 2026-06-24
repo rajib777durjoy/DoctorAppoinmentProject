@@ -17,7 +17,6 @@ const AuthProvider = ({ children }) => {
         return signInWithPopup(auth, provider)
     }
     const userSignUp = (email, password) => {
-        
         setloading(true)
         return createUserWithEmailAndPassword(auth, email, password)
     }

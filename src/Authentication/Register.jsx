@@ -8,15 +8,14 @@ import useAuth from '../Hook/useAuth';
 import axios from 'axios';
 import axiosSecure from '../Hook/axiosSecure';
 
-const image_key = import.meta.env.VITE_ImgbbAPIKey;
-const image_hosting_API = `https://api.imgbb.com/1/upload?key=${image_key}`;
+// const image_key = import.meta.env.VITE_ImgbbAPIKey;
+// const image_hosting_API = `https://api.imgbb.com/1/upload?key=${image_key}`;
 
 const Register = () => {
     const { userSignUp, ProfileUpdate, googleSign } = useAuth();
     const axiospublic = AxiosPublic();
     const AxiosSequre = axiosSecure();
     const navigateHome = useNavigate();
-
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     const handleGoogle = () => {
@@ -28,8 +27,17 @@ const Register = () => {
                     image: res.user?.photoURL,
                     role: "member",
                 };
+                const formData = new FormData();
+                formData.append("name", res.user?.displayName);
+                formData.append("email", res.user?.email);
+                formData.append("role", "member");
+                formData.append("image", res.user?.photoURL);
 
-                axiospublic.post(`/addUser/${res?.user?.email}`, userInfo)
+                axiospublic.post(`/addUser/${res?.user?.email}`, formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                })
                     .then(() => {
                         navigateHome('/');
                         Swal.fire({
@@ -44,37 +52,40 @@ const Register = () => {
     };
 
     const onSubmit = async (data) => {
-        const res = await axios.post(image_hosting_API, { image: data.image[0] }, {
-            headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        console.log('register form data', data.image[0]);
+        const imageFile = data.image[0];
+        userSignUp(data.email, data.password)
+            .then((res) => {
+                const formData = new FormData();
+                formData.append("name", data.name);
+                formData.append("email", data.email);
+                formData.append("role", "member");
+                formData.append("image", imageFile);
+                if (res?.user) {
+                    AxiosSequre.post(`/addUser/${data.email}`,formData, {
+                        headers: {
+                            "Content-Type": "multipart/form-data"
+                        }
+                    })
+                        .then((res) => { // insert user data // 
+                            console.log(res)
+                            if (res.data?.insertedId) {
+                                ProfileUpdate(res.data?.name, res.data?.profile).then(() => {
+                                    navigateHome('/');
+                                    Swal.fire({
+                                        icon: "success",
+                                        title: "Registration successful",
+                                        timer: 1500,
+                                        showConfirmButton: false,
+                                        position: "top-center",
+                                    });
+                                })
+                            }
+                        });
+                }
 
-        const photoURL = res.data?.data?.display_url;
+            });
 
-        if (res.data?.success) {
-            userSignUp(data.email, data.password)
-                .then(() => {
-                    ProfileUpdate(data.name, photoURL).then(() => {
-                        const userData = {
-                            name: data.name,
-                            email: data.email,
-                            photoURL,
-                            role: 'member'
-                        };
-
-                        AxiosSequre.post(`/addUser/${data.email}`, userData)
-                            .then(() => {
-                                navigateHome('/');
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Registration successful",
-                                    timer: 1500,
-                                    showConfirmButton: false,
-                                    position: "top-center",
-                                });
-                            });
-                    });
-                });
-        }
     };
 
     return (
