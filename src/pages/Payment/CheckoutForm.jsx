@@ -126,7 +126,7 @@ const CheckoutForm = ({ price, day,id }) => {
           },
         }}
       />
-      <button className='btn w-[150px] bg-amber-200 my-2' type="submit" disabled={!stripe || !elements}>
+      <button className='btn w-[150px] text-white bg-blue-500 my-2' type="submit" disabled={!stripe || !elements}>
         {loading ? 'Processing...' : 'Pay'}
       </button>
       {/* Show error message to your customers */}

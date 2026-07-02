@@ -39,7 +39,7 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center text-yellow-600 text-xl font-semibold">
+      <div className="h-screen flex items-center justify-center text-black text-xl font-semibold">
         Loading Dashboard...
       </div>
     );
@@ -53,7 +53,7 @@ const Dashboard = () => {
 
         <button
           onClick={() => setOpen(true)}
-          className="md:hidden bg-yellow-500 text-white px-3 py-1 rounded-lg"
+          className="md:hidden bg-blue-500 text-white px-3 py-1 rounded-lg"
         >
           ☰
         </button>

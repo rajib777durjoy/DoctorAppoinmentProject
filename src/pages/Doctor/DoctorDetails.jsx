@@ -1,15 +1,20 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useContext } from 'react';
+import {useNavigate, useParams } from 'react-router-dom';
 import AxiosPublic from '../../Hook/AxosPublic';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { FaUserMd, FaMoneyBillWave, FaRegClock } from "react-icons/fa";
 import { FiUploadCloud } from "react-icons/fi";
+import useAuth from '../../Hook/useAuth';
+import axiosSecure from '../../Hook/axiosSecure';
+import Swal from 'sweetalert2';
 
 const DoctorDetails = () => {
   const { id } = useParams();
   const axiospublic = AxiosPublic();
-
+  const AxiosSecure = axiosSecure();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const active = true;
 
   const { data: doctor = {} } = useQuery({
@@ -19,6 +24,34 @@ const DoctorDetails = () => {
       return res.data;
     },
   });
+
+  const handleDoctorBooking = async (id) => { // doctor id 
+    const data = {
+      doctor_id: id,
+      doctorName: doctor?.name,
+      doctorFee: doctor?.fee,
+    }
+    const res = await AxiosSecure.post(`/doctor_book/${user?.email}`, data)
+    if (res.data?.insertedId) {
+      Swal.fire({
+        position: "top-center",
+        icon: "success",
+        title: res.data?.message,
+        showConfirmButton: false,
+        timer: 1500
+      });
+    }
+    else {
+      Swal.fire({
+        position: "top-center",
+        icon: "error",
+        title: res.data?.message,
+        showConfirmButton: false,
+        timer: 1500
+      });
+    }
+  
+  }
 
   return (
     <section className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 py-8 sm:py-12">
@@ -133,8 +166,8 @@ const DoctorDetails = () => {
               You can book an appointment with Dr. {doctor?.name}.
               Please ensure all required documents are uploaded before booking.
             </p>
-            {active && <button className="mt-5 w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition shadow-md">
-              Confirm Booking
+            {active && <button onClick={() => handleDoctorBooking(doctor._id)} className="mt-5 w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition shadow-md">
+               Booking
             </button> || <p className="mt-6 text-red-500 text-center text-sm">
                 Doctor is currently not available
               </p>

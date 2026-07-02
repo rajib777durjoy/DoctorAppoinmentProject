@@ -7,11 +7,11 @@ import useAuth from '../../Hook/useAuth';
 import AxiosPublic from '../../Hook/AxosPublic';
 
 const AddDoctor = () => {
-  const [selectedDays, setSelectedDays] = useState([]);
+  // const [selectedDays, setSelectedDays] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [category, setCategory] = useState([]);
   const [degreeList, setDegreeList] = useState([]);
-  const [categoryValue, setCategoryValue] = useState('');
+  const [categoryValue, setCategoryValue] = useState([]);
 
   const axiospublic = AxiosPublic();
   const AxiosSecure = axiosSecure();
@@ -19,15 +19,14 @@ const AddDoctor = () => {
 
   const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const daysOptions = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
-    .map(day => ({ value: day, label: day }));
+  // const daysOptions = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"].map(day => ({ value: day, label: day }));
 
   const skillsOptions = degreeList.map(d => ({
     value: d.degree,
     label: d.degree
   }));
 
-  const days = selectedDays.map(d => d.value);
+  // const days = selectedDays.map(d => d.value);
   const skills = selectedSkills.map(s => s.value);
 
   useEffect(() => {
@@ -46,9 +45,9 @@ const AddDoctor = () => {
       endTime: data.endTime,
       Category: categoryValue,
       description: data.description,
-      PatientLimit: parseInt(data.limit),
+      // PatientLimit: parseInt(data.limit),
       status: "pending",
-      day: days,
+      // day: days,
       skill: skills
     };
 
@@ -123,7 +122,7 @@ const AddDoctor = () => {
                 className="input input-bordered w-full mt-1"
               />
             </div>
-
+            
             <div>
               <label className="text-sm font-medium text-gray-700">Category</label>
               <select
@@ -159,7 +158,7 @@ const AddDoctor = () => {
               </div>
             </div>
 
-            <div>
+            {/* <div>
               <label className="text-sm font-medium">Available Days</label>
               <Select
                 isMulti
@@ -167,7 +166,7 @@ const AddDoctor = () => {
                 value={selectedDays}
                 onChange={setSelectedDays}
               />
-            </div>
+            </div> */}
 
             <div>
               <label className="text-sm font-medium">Degrees</label>
@@ -179,14 +178,14 @@ const AddDoctor = () => {
               />
             </div>
 
-            <div>
+            {/* <div>
               <label className="text-sm">Patient Limit</label>
               <input
                 type="number"
                 {...register("limit", { required: true })}
                 className="input input-bordered w-full mt-1"
               />
-            </div>
+            </div> */}
 
             <div>
               <label className="text-sm">Description</label>

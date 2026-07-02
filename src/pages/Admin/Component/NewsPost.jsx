@@ -10,9 +10,9 @@ const NewsPost = () => {
     const AxiosSequre = axiosSecure();
 
     const cloudName = 'dwmkakht7';
-    const {user} = useAuth();
-    const navigateHome= useNavigate()
-    console.log('users:',user?.email)
+    const { user } = useAuth();
+    const navigateHome = useNavigate()
+    console.log('users:', user?.email)
     const handleImageChange = async (e) => {
         const imageFile = e.target.files[0];
         const formData = new FormData();
@@ -37,11 +37,11 @@ const NewsPost = () => {
             Image,
             content,
         }
-      
-        if(!user?.email){
+
+        if (!user?.email) {
             return <div className='text-center text-rose-500'>user is not show</div>
         }
-         const res = await AxiosSequre.post(`/newspost/${user?.email}`, datas)
+        const res = await AxiosSequre.post(`/newspost/${user?.email}`, datas)
         console.log('post_data:', res.data?.insertedId);
         if (res.data?.insertedId) {
             Swal.fire({
@@ -51,70 +51,160 @@ const NewsPost = () => {
                 showConfirmButton: false,
                 timer: 1500
             });
-           setImageUrl('') 
-           navigateHome('/dashboard/doctorHome')
-       }
+            setImageUrl('')
+            navigateHome('/dashboard/doctorHome')
+        }
     }
 
     // console.log('Image::', Image.name)
     return (
-        <div className="max-w-3xl mx-auto p-6 bg-white text-gray-800 rounded-lg shadow-lg mt-10 border border-yellow-400">
-            <h2 className="text-3xl font-bold mb-6 text-yellow-600 text-center">📝 Create New Post</h2>
+        <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-blue-100 py-10 px-4">
 
-            <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Title */}
-                <div>
-                    <label className="block mb-1 font-semibold text-yellow-700">Title</label>
-                    <input
-                        type="text"
-                        name="title"
+            <div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden border border-cyan-100">
 
-                        className="w-full p-3 rounded border border-yellow-300 focus:outline-yellow-500"
-                        placeholder="Enter post title"
-                        required
-                    />
-                </div>
+                {/* Header */}
+                <div className="bg-gradient-to-r from-cyan-600 to-blue-700 px-8 py-10 text-white">
 
-                {/* Tags */}
-                <div>
-                    <label className="block mb-1 font-semibold text-yellow-700">Tags (comma-separated)</label>
-                    <input
-                        type="text"
-                        name="tags"
-                        className="w-full p-3 rounded border border-yellow-300 focus:outline-yellow-500"
-                        placeholder="e.g. react, tailwind"
-                    />
-                </div>
+                    <h2 className="text-4xl font-bold">
+                        📝 Create Health News
+                    </h2>
 
-                {/* Image upload */}
-                <div>
-                    <label className="block mb-1 font-semibold text-yellow-700">Cover Image URL</label>
-                    {/* <input type="file" name='image' onChange={handleImageChange}  /> */}
-                    <input type="file" accept="image/*" onChange={handleImageChange} className="file-input w-full  rounded border border-yellow-300 focus:outline-yellow-500" />
+                    <p className="mt-3 text-cyan-100 text-lg">
+                        Share medical news, awareness articles and healthcare updates.
+                    </p>
 
                 </div>
-                <img className='rounded-md' src={Image} alt="" width={50} height={50} />
-                {/* Content */}
-                <div>
-                    <label className="block mb-1 font-semibold text-yellow-700">Post Content</label>
-                    <textarea
-                        name="content"
-                        rows="8"
 
-                        className="w-full p-3 rounded border border-yellow-300 focus:outline-yellow-500"
-                        placeholder="Write your post content here..."
-                        required
-                    ></textarea>
-                </div>
-
-                {/* Submit Button */}
-                <button
-                    type="submit"
-                    className="bg-yellow-500 text-white px-6 py-3 rounded hover:bg-yellow-600 transition w-full font-semibold"
+                {/* Form */}
+                <form
+                    onSubmit={handleSubmit}
+                    className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8"
                 >
-                    🚀 Publish Post
-                </button>
-            </form>
+
+                    {/* Title */}
+                    <div className="lg:col-span-2">
+
+                        <label className="block mb-2 font-semibold text-gray-700">
+                            News Title
+                        </label>
+
+                        <input
+                            type="text"
+                            name="title"
+                            placeholder="Enter News Title"
+                            required
+                            className="w-full rounded-xl border border-gray-300 bg-gray-50 px-5 py-4 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                        />
+
+                    </div>
+
+                    {/* Tags */}
+                    <div>
+
+                        <label className="block mb-2 font-semibold text-gray-700">
+                            Tags
+                        </label>
+
+                        <input
+                            type="text"
+                            name="tags"
+                            placeholder="health, covid, medicine"
+                            className="w-full rounded-xl border border-gray-300 bg-gray-50 px-5 py-4 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                        />
+
+                    </div>
+
+                    {/* Upload */}
+                    <div>
+
+                        <label className="block mb-2 font-semibold text-gray-700">
+                            Upload Cover Image
+                        </label>
+
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            className="file-input file-input-bordered w-full"
+                        />
+
+                    </div>
+
+                    {/* Preview */}
+                    <div className="lg:col-span-2">
+
+                        <label className="block mb-3 font-semibold text-gray-700">
+                            Image Preview
+                        </label>
+
+                        <div className="flex justify-center">
+
+                            {
+                                Image ?
+
+                                    <img
+                                        src={Image}
+                                        alt=""
+                                        className="w-full md:w-[450px] h-[260px] object-cover rounded-2xl shadow-lg border"
+                                    />
+
+                                    :
+
+                                    <div className="w-full md:w-[450px] h-[260px] border-2 border-dashed rounded-2xl flex items-center justify-center text-gray-400">
+                                        Image Preview
+                                    </div>
+
+                            }
+
+                        </div>
+
+                    </div>
+
+                    {/* Content */}
+                    <div className="lg:col-span-2">
+
+                        <label className="block mb-2 font-semibold text-gray-700">
+                            News Content
+                        </label>
+
+                        <textarea
+                            name="content"
+                            rows="10"
+                            placeholder="Write your article here..."
+                            required
+                            className="w-full rounded-xl border border-gray-300 bg-gray-50 px-5 py-4 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                        ></textarea>
+
+                    </div>
+
+                    {/* Bottom Card */}
+                    <div className="lg:col-span-2 bg-cyan-50 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-5">
+
+                        <div>
+
+                            <h3 className="font-bold text-xl text-gray-700">
+                                Ready to Publish?
+                            </h3>
+
+                            <p className="text-gray-500">
+                                Double check your title, image and content before publishing.
+                            </p>
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-700 hover:to-blue-800 text-white px-10 py-4 rounded-xl font-bold shadow-lg transition duration-300 hover:scale-105"
+                        >
+                            🚀 Publish News
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
         </div>
     );
 };

@@ -17,7 +17,7 @@ const Navbar = () => {
     AxiosSecure.get(`/verify_user/${user.email}`).then((res) => {
       if (res?.data?.role) {
         setRole(res?.data?.role);
-        console.log(res?.data?.role)
+        console.log('role::',res?.data?.role)
       }
     });
   }, [user, loading]);
@@ -33,7 +33,7 @@ const Navbar = () => {
       ? "bg-blue-100 text-blue-600"
       : "text-gray-700 hover:text-blue-600 hover:bg-gray-100"
     }`;
-  //  console.log('role',role,loading)
+   console.log('role',role)
   return (
     <header className="sticky top-0 z-50 backdrop-blur-lg bg-white/80 border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 lg:px-8">

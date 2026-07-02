@@ -21,7 +21,7 @@ const AddCategory = () => {
       AxioSecure.post(`/addCategory`, data)
         .then(res => {
           console.log('add category value is here:', res)
-          if (res.data.insertedId) {
+          if (res.data?.insertedId) {
             Swal.fire({
               position: "top-center",
               icon: "success",
@@ -60,110 +60,127 @@ const AddCategory = () => {
 
   }
   return (
-    // <div className='w-[100%] border grid grid-cols-2'>
 
-    //     <form onSubmit={handleSubmit} className='w-[70%] mx-auto'>
-    //         <fieldset className="fieldset">
-    //             <legend className="fieldset-legend">Add Category</legend>
-    //             <input type="text" name='category' onChange={(e)=>setValue(e.target.value)} className="input w-[100%] rounded-md border-2 border-amber-200" placeholder="Type here" />
-    //             <textarea name="description" onChange={(e)=>{setDescrption(e.target.value)}} rows={5} placeholder='Bio' className='border-2 rounded-xl p-2 border-amber-200' id=""></textarea>
-    //         </fieldset>
-    //         <div>
-    //             <button type='submit' disabled={value.length < 5 || description.length < 10} className='btn bg-amber-200 rounded-md'>Add Category</button>
-    //         </div>
-    //     </form>
-    //     <form onSubmit={handleSubmit2} className='w-[70%] mx-auto'>
-    //         <fieldset className="fieldset">
-    //             <legend className="fieldset-legend">Add Degree</legend>
-    //             <input type="text" name='degree' onChange={(e)=>setdegreeValue(e.target.value)} className="input rounded-md border-2 w-[100%] border-amber-200" placeholder="Type here" />
-    //             <textarea name="details" onChange={(e)=>{setdegreeDetails(e.target.value)}} rows={5} placeholder='Bio'className='border-2 rounded-xl p-2 border-amber-200' id=""></textarea>
-    //         </fieldset>
-    //         <div>
-    //             <button type='submit' disabled={degreeValue.length < 5 || degreeDetails.length < 10} className='btn bg-amber-200 rounded-md'>Add Degree</button>
-    //         </div>
-    //     </form>
-    // </div>
-    <div className="w-full min-h-screen bg-white px-6 py-10">
-      <h1 className="text-3xl font-bold text-yellow-700 text-center mb-10">Manage Doctor Categories & Degrees</h1>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 p-4 md:p-8">
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+      {/* Header */}
+      <div className="text-center mb-10">
+        <h1 className="text-4xl font-bold text-blue-700">
+          Manage Doctor Categories & Degrees
+        </h1>
 
-        {/* Add Category Form */}
-        <form onSubmit={handleSubmit} className="bg-yellow-50 border border-yellow-200 rounded-2xl p-6 shadow-sm w-full">
-          <fieldset className="border border-yellow-300 p-4 rounded-md">
-            <legend className="text-lg font-semibold text-yellow-700 px-2">Add Category</legend>
+        <p className="text-gray-500 mt-2">
+          Add new doctor specialties and educational qualifications.
+        </p>
+      </div>
 
-            <div className="mt-4 space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+        {/* Category Card */}
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white rounded-3xl shadow-xl border border-blue-100 p-8"
+        >
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-2xl">
+              🩺
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-bold text-blue-700">
+                Add Category
+              </h2>
+
+              <p className="text-gray-500 text-sm">
+                Create a new doctor category.
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-5">
+
+            <div>
+              <label className="block mb-2 font-medium text-gray-700">
+                Category Name
+              </label>
+
               <input
                 type="text"
                 name="category"
                 onChange={(e) => setValue(e.target.value)}
-                className="input w-full rounded-md border-2 border-yellow-300 p-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                placeholder="Category Name"
+                placeholder="e.g. Cardiologist"
+                className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-
-              <textarea
-                name="description"
-                onChange={(e) => setDescrption(e.target.value)}
-                rows={5}
-                placeholder="Category Description"
-                className="w-full border-2 rounded-xl p-3 border-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              ></textarea>
             </div>
-          </fieldset>
 
-          <div className="mt-6 text-right">
-            <button
-              type="submit"
-              disabled={value.length < 5 || description.length < 10}
-              className={`px-6 py-2 rounded-md font-semibold text-white ${value.length < 5 || description.length < 10
-                  ? 'bg-yellow-300 cursor-not-allowed'
-                  : 'bg-yellow-500 hover:bg-yellow-600'
-                } transition-all duration-300`}
-            >
-              Add Category
-            </button>
           </div>
+
+          <button
+            type="submit"
+            className={`w-full mt-8 py-3 rounded-xl font-semibold transition-all duration-300 bg-blue-700 hover:bg-blue-500 text-white shadow-lg hover:shadow-blue-300"
+        }
+        `}
+          >
+            Add Category
+          </button>
         </form>
 
-        {/* Add Degree Form */}
-        <form onSubmit={handleSubmit2} className="bg-yellow-50 border border-yellow-200 rounded-2xl p-6 shadow-sm w-full">
-          <fieldset className="border border-yellow-300 p-4 rounded-md">
-            <legend className="text-lg font-semibold text-yellow-700 px-2">Add Degree</legend>
+        {/* Degree Card */}
 
-            <div className="mt-4 space-y-4">
+        <form
+          onSubmit={handleSubmit2}
+          className="bg-white rounded-3xl shadow-xl border border-blue-100 p-8"
+        >
+          <div className="flex items-center gap-3 mb-6">
+
+            <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-2xl">
+              🎓
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-bold text-blue-700">
+                Add Degree
+              </h2>
+
+              <p className="text-gray-500 text-sm">
+                Add doctor's educational qualification.
+              </p>
+            </div>
+
+          </div>
+
+          <div className="space-y-5">
+
+            <div>
+              <label className="block mb-2 font-medium text-gray-700">
+                Degree Name
+              </label>
+
               <input
                 type="text"
                 name="degree"
                 onChange={(e) => setdegreeValue(e.target.value)}
-                className="input w-full rounded-md border-2 border-yellow-300 p-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                placeholder="Degree Name"
+                placeholder="e.g. MBBS"
+                className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-
-              <textarea
-                name="details"
-                onChange={(e) => setdegreeDetails(e.target.value)}
-                rows={5}
-                placeholder="Degree Details"
-                className="w-full border-2 rounded-xl p-3 border-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              ></textarea>
             </div>
-          </fieldset>
 
-          <div className="mt-6 text-right">
-            <button
-              type="submit"
-              disabled={degreeValue.length < 5 || degreeDetails.length < 10}
-              className={`px-6 py-2 rounded-md font-semibold text-white ${degreeValue.length < 5 || degreeDetails.length < 10
-                  ? 'bg-yellow-300 cursor-not-allowed'
-                  : 'bg-yellow-500 hover:bg-yellow-600'
-                } transition-all duration-300`}
-            >
-              Add Degree
-            </button>
           </div>
+
+          <button
+            type="submit"
+            className={`w-full mt-8 py-3 rounded-xl font-semibold cursor-pointer transition-all duration-300 bg-blue-700  hover:bg-blue-500 text-white shadow-lg hover:shadow-blue-300"
+        }
+
+        `}
+          >
+            Add Degree
+          </button>
+
         </form>
+
       </div>
+
     </div>
 
   );
